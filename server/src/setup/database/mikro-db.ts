@@ -10,12 +10,7 @@ import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
 import path from 'path'
 import { Repos, DB } from './types'
-import { ClubEntity } from '../../shared/infra/db/entities/club.entity'
-import { EventEntity } from '../../shared/infra/db/entities/event.entity'
-import { TagEntity } from '../../shared/infra/db/entities/tags/tag.entity'
 import { UserEntity } from '../../shared/infra/db/entities/user.entity'
-import { MikroClubRepo } from '../../modules/clubs/infra/repos/implementations/mikro-club-repo'
-import { MikroEventRepo } from '../../modules/events/infra/repos/implementations/mikro-event-repo'
 import { MikroUserRepo } from '../../modules/users/infra/repos/implementations/mikro-user-repo'
 
 class CustomNamingStrategy extends AbstractNamingStrategy implements NamingStrategy {
@@ -86,30 +81,20 @@ const setupMikroORM = async (options: Options = {}): Promise<MikroORM> => {
 }
 
 interface MikroEntityRepos {
-  club: EntityRepository<ClubEntity>
-  event: EntityRepository<EventEntity>
-  tag: EntityRepository<TagEntity>
   user: EntityRepository<UserEntity>
 }
 const setupMikroEntityRepos = ({ em: entityManager }: MikroORM): MikroEntityRepos => {
   return {
-    club: entityManager.getRepository(ClubEntity),
-    event: entityManager.getRepository(EventEntity),
-    tag: entityManager.getRepository(TagEntity),
-    user: entityManager.getRepository(UserEntity),
+    user: entityManager.getRepository(UserEntity)
   }
 }
 
 interface MikroRepos extends Repos {
-  club: MikroClubRepo
-  event: MikroEventRepo
   user: MikroUserRepo
 }
 const setupMikroRepos = (mikroEntityRepos: MikroEntityRepos): MikroRepos => {
   return {
-    club: new MikroClubRepo(mikroEntityRepos.club),
-    event: new MikroEventRepo(mikroEntityRepos.event),
-    user: new MikroUserRepo(mikroEntityRepos.user),
+    user: new MikroUserRepo(mikroEntityRepos.user)
   }
 }
 

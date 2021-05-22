@@ -1,10 +1,10 @@
 import { db, app, http } from './setup'
 
-interface WaterparkOptions {
+interface AuthOptions {
   port: string
 }
 
-const waterpark = async (options: WaterparkOptions) => {
+const auth = async (options: AuthOptions) => {
   const { orm, repos } = await db.setupMikroDB()
   const migrator = orm.getMigrator()
   await migrator.up()
@@ -13,10 +13,10 @@ const waterpark = async (options: WaterparkOptions) => {
 
   const { webServer } = http.setupWaterparkExpress(controllers, useCases, { mikroORM: orm })
   webServer.listen(options.port, () => {
-    console.log(`Waterpark REST API server running on http://localhost:${port}/api/v1 🦆`)
+    console.log(`WATERPARK AUTH server running on http://localhost:${port}/api/v1 🦆`)
   })
 }
 
-const port = process.env.PORT || '3001'
+const port = process.env.PORT || '3002'
 const options = { port }
-waterpark(options)
+auth(options)

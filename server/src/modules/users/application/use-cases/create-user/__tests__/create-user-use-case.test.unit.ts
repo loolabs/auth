@@ -5,6 +5,7 @@ import { UserValueObjectErrors } from '../../../../domain/value-objects/errors'
 import { CreateUserDTO } from '../create-user-dto'
 import { CreateUserErrors } from '../create-user-errors'
 import { CreateUserSuccess, CreateUserUseCase } from '../create-user-use-case'
+import { DBError } from '../../../../../../shared/infra/db/errors/errors'
 
 jest.mock('../../../../infra/repos/implementations/mock-user-repo')
 
@@ -27,8 +28,14 @@ describe('CreateUserUseCase', () => {
   })
 
   test('When executed with valid DTO, should save the user and return an Ok', async () => {
+    const mockUser = mocks.mockUser(createUserDTO)
+    jest.spyOn(userRepo, 'exists').mockResolvedValue(Result.err(new DBError.UserNotFoundError(createUserDTO.email)))
+    jest.spyOn(userRepo, 'getUserByUserEmail').mockResolvedValue(Result.ok(mockUser))
     const createUserResult = await createUserUseCase.execute(createUserDTO)
-    
+    if (createUserResult.isErr()) {
+      console.log(createUserResult.error)
+    }
+
     expect(userRepo.save).toBeCalled()
     expect(createUserResult.isOk()).toBe(true)
   })

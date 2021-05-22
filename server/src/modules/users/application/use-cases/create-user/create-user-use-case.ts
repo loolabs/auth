@@ -10,7 +10,7 @@ import { CreateUserDTO } from './create-user-dto'
 import { CreateUserErrors } from './create-user-errors'
 import { UserMap } from '../../../mappers/user-map'
 import { UserDTO } from '../../../mappers/user-dto'
-import { PassportUserAuthHandler } from '../../../../../shared/auth/implementations/passport-user-auth-handler'
+import { UserAuthHandler } from '../../../../../shared/auth/user-auth-handler'
 
 export type CreateUserUseCaseError =
   | UserValueObjectErrors.InvalidEmail
@@ -26,7 +26,7 @@ export type CreateUserSuccess = {
 export type CreateUserUseCaseResponse = Result<CreateUserSuccess, CreateUserUseCaseError>
 
 export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUserUseCaseResponse> {
-  constructor(private userRepo: UserRepo) { this.userRepo = userRepo }
+  constructor(private authHandler: UserAuthHandler, private userRepo: UserRepo) {}
 
   async execute(dto: CreateUserDTO): Promise<CreateUserUseCaseResponse> {
     const emailResult = UserEmail.create(dto.email)
@@ -46,7 +46,7 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
     try {
       const userAlreadyExists = await this.userRepo.exists(email)
       console.log(userAlreadyExists)
-      if (userAlreadyExists.isOk() && userAlreadyExists.value){
+      if (userAlreadyExists){
         return Result.err(new CreateUserErrors.EmailAlreadyExistsError(email.value))
       }
         
@@ -62,7 +62,7 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
       if(updatedUser.isErr())
         return Result.err(new AppError.UnexpectedError(updatedUser.error.message))
       
-        const tokenResponse = await new PassportUserAuthHandler().create(updatedUser.value.id.toString())
+        const tokenResponse = await this.authHandler.create(updatedUser.value.id.toString())
 
       if(tokenResponse.isErr())
         return tokenResponse

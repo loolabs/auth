@@ -52,13 +52,6 @@ const setupBasicWebServer = (apiRouter: APIRouter, _controllers: Controllers, us
       })
   );
 
-
-
-
-
-
-
-
   server.use((_req, res) => res.status(404).json({ message: 'No route found' }))
 
   return server
