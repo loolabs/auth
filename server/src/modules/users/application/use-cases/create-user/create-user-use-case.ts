@@ -45,8 +45,8 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
 
     try {
       const userAlreadyExists = await this.userRepo.exists(email)
-      console.log(userAlreadyExists)
-      if (userAlreadyExists){
+
+      if (userAlreadyExists && userAlreadyExists.isOk()){
         return Result.err(new CreateUserErrors.EmailAlreadyExistsError(email.value))
       }
         
@@ -62,7 +62,7 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
       if(updatedUser.isErr())
         return Result.err(new AppError.UnexpectedError(updatedUser.error.message))
       
-        const tokenResponse = await this.authHandler.create(updatedUser.value.id.toString())
+      const tokenResponse = await this.authHandler.create(updatedUser.value.id.toString())
 
       if(tokenResponse.isErr())
         return tokenResponse

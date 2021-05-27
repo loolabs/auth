@@ -32,9 +32,6 @@ describe('CreateUserUseCase', () => {
     jest.spyOn(userRepo, 'exists').mockResolvedValue(Result.err(new DBError.UserNotFoundError(createUserDTO.email)))
     jest.spyOn(userRepo, 'getUserByUserEmail').mockResolvedValue(Result.ok(mockUser))
     const createUserResult = await createUserUseCase.execute(createUserDTO)
-    if (createUserResult.isErr()) {
-      console.log(createUserResult.error)
-    }
 
     expect(userRepo.save).toBeCalled()
     expect(createUserResult.isOk()).toBe(true)
