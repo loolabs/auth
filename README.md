@@ -1,4 +1,4 @@
-# Waterpark
+# Auth
 
 ## Quick Start
 
