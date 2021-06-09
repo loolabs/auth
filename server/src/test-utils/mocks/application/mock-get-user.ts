@@ -1,5 +1,5 @@
-import { MockUserRepo } from '../../../modules/users/infra/repos/implementations/mock-user-repo'
-import { User } from '../../../modules/users/domain/entities/user'
+import { MockUserRepo } from '../../../modules/users/infra/repos/user-repo/implementations/mock-user-repo'
+import { User } from '../../../modules/users/domain/entities/user/user'
 import { UserMap } from '../../../modules/users/mappers/user-map'
 import { GetUserUseCase } from '../../../modules/users/application/use-cases/get-user/get-user-use-case'
 

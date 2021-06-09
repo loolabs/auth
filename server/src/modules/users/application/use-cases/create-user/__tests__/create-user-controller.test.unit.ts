@@ -56,11 +56,11 @@ describe('CreateUserController', () => {
     expect(res.statusCode).toBe(400)
   })
 
-  test('When the CreateUserUseCase returns UserValueObjectErrors.InvalidPassword, CreateUserController returns 400 Bad Request', async () => {
+  test('When the CreateUserUseCase returns UserValueObjectErrors.InvalidSecret, CreateUserController returns 400 Bad Request', async () => {
     jest
       .spyOn(CreateUserUseCase.prototype, 'execute')
       .mockResolvedValue(
-        Result.err(new UserValueObjectErrors.InvalidPassword(createUserDTO.password))
+        Result.err(new UserValueObjectErrors.InvalidSecret(createUserDTO.password))
       )
 
     const { req, res } = mocks.mockHandlerParams(createUserDTO)

@@ -7,7 +7,7 @@ import { ProtectedUserController } from '../protected-user-controller'
 import { mocks } from '../../../../../../test-utils'
 
 // TODO: how to show developer these mocks are necessary when building a controller? aka must be synced with buildController()
-jest.mock('../../../../infra/repos/implementations/mikro-user-repo')
+jest.mock('../../../../infra/repos/user-repo/implementations/mikro-user-repo')
 jest.mock('../protected-user-use-case')
 
 describe('ProtectedUserController', () => {

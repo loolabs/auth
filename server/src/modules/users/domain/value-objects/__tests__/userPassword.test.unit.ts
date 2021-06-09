@@ -3,7 +3,7 @@ import { UserValueObjectErrors } from '../errors'
 import { UserPassword } from '../user-password'
 
 describe('UserPassword ValueObject', () => {
-  test('When created with a password value that is too small, it returns UserValueObjectErrors.InvalidPassword', () => {
+  test('When created with a password value that is too small, it returns UserValueObjectErrors.InvalidSecret', () => {
     const tooSmallOfAPassword = '2shrt'
     const hashed = false
 
@@ -13,8 +13,8 @@ describe('UserPassword ValueObject', () => {
     })
 
     expect(passwordResult.isErr())
-    const passwordErr = passwordResult as Err<UserPassword, UserValueObjectErrors.InvalidPassword>
-    expect(passwordErr.error instanceof UserValueObjectErrors.InvalidPassword).toBe(true)
+    const passwordErr = passwordResult as Err<UserPassword, UserValueObjectErrors.InvalidSecret>
+    expect(passwordErr.error instanceof UserValueObjectErrors.InvalidSecret).toBe(true)
   })
 
   test('When a Password is asked for hash value, it returns the hashed value instead of raw password', async () => {
@@ -67,7 +67,7 @@ describe('UserPassword ValueObject', () => {
     const password = passwordResult.value
     const duplicatePassword = duplicatePasswordResult.value
 
-    const passwordsEqualResult = await password.comparePassword(await duplicatePassword.getHashedValue())
+    const passwordsEqualResult = await password.compareSecret(await duplicatePassword.getHashedValue())
     
     const passwordsEqual = passwordsEqualResult.isOk() && passwordsEqualResult.value
     expect(passwordsEqual).toBe(true)
@@ -94,7 +94,7 @@ describe('UserPassword ValueObject', () => {
     const password = passwordResult.value
     const duplicatePassword = duplicatePasswordResult.value
 
-    const passwordsEqualResult = await password.comparePassword(await duplicatePassword.getHashedValue())
+    const passwordsEqualResult = await password.compareSecret(await duplicatePassword.getHashedValue())
     
     const passwordsEqual = passwordsEqualResult.isOk() && passwordsEqualResult.value
     expect(passwordsEqual).toBe(false)

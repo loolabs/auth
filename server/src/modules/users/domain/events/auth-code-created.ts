@@ -1,17 +1,17 @@
 import { DomainEvent } from '../../../../shared/domain/events/domain-event'
 import { UniqueEntityID } from '../../../../shared/domain/unique-entity-id'
-import { User } from '../entities/user/user'
+import { AuthCode } from '../entities/auth-code/auth-code'
 
-export class UserLoggedIn implements DomainEvent {
+export class AuthCodeCreated implements DomainEvent {
   public dateTimeOccurred: Date
-  public user: User
+  public authCode: AuthCode
 
-  constructor(user: User) {
+  constructor(authCode: AuthCode) {
     this.dateTimeOccurred = new Date()
-    this.user = user
+    this.authCode = authCode
   }
 
   public getAggregateId(): UniqueEntityID {
-    return this.user.id
+    return this.authCode.id
   }
 }

@@ -1,5 +1,5 @@
 import { Result } from '../../../../shared/core/result'
-import { User } from '../../../../modules/users/domain/entities/user'
+import { User } from '../../../../modules/users/domain/entities/user/user'
 import { UserEmail } from '../../../../modules/users/domain/value-objects/user-email'
 import { UserPassword } from '../../../../modules/users/domain/value-objects/user-password'
 import { CreateUserDTO } from '../../../../modules/users/application/use-cases/create-user/create-user-dto'
