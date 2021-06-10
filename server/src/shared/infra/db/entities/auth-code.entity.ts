@@ -6,10 +6,10 @@ import { BaseEntity } from './base.entity'
 @Entity()
 export class AuthCodeEntity extends BaseEntity {
   @Property()
-  @Index()
   clientId!: string
 
   @Property()
+  @Index()
   authCode!: string
 
   // TODO: fix any type
