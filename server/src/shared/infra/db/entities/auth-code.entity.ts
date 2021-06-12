@@ -10,7 +10,7 @@ export class AuthCodeEntity extends BaseEntity {
 
   @Property()
   @Index()
-  authCode!: string
+  authCodeString!: string
 
   // TODO: fix any type
   @AfterCreate()

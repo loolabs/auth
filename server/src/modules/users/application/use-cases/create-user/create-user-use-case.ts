@@ -14,7 +14,7 @@ import { UserAuthHandler } from '../../../../../shared/auth/user-auth-handler'
 
 export type CreateUserUseCaseError =
   | UserValueObjectErrors.InvalidEmail
-  | UserValueObjectErrors.InvalidSecret
+  | UserValueObjectErrors.InvalidSecretValue
   | CreateUserErrors.EmailAlreadyExistsError
   | AppError.UnexpectedError
 

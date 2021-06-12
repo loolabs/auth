@@ -12,10 +12,10 @@ export class UserPassword extends EncryptedSecret {
 
   public static create(
     props: UserPasswordProps
-  ): Result<UserPassword, UserValueObjectErrors.InvalidSecret> {
+  ): Result<UserPassword, UserValueObjectErrors.InvalidSecretValue> {
     if (!props.hashed && !this.isAppropriateLength(props.value)) {
       return Result.err(
-        new UserValueObjectErrors.InvalidSecret(`Password doesn't meet criteria [${this.minLength} chars min].`)
+        new UserValueObjectErrors.InvalidSecretValue(`Password doesn't meet criteria [${this.minLength} chars min].`)
       )
     }
 

@@ -60,7 +60,7 @@ describe('CreateUserController', () => {
     jest
       .spyOn(CreateUserUseCase.prototype, 'execute')
       .mockResolvedValue(
-        Result.err(new UserValueObjectErrors.InvalidSecret(createUserDTO.password))
+        Result.err(new UserValueObjectErrors.InvalidSecretValue(createUserDTO.password))
       )
 
     const { req, res } = mocks.mockHandlerParams(createUserDTO)

@@ -11,7 +11,7 @@ describe('Authcode AggregateRoot', () => {
 
     AuthCode.create({
       clientId: 'test_client_id',
-      authCode: new AuthCodeString('test_auth_code')
+      authCodeString: new AuthCodeString('test_auth_code')
     })
 
     expect(AuthCodeCreated).toBeCalled()

@@ -6,14 +6,14 @@ export namespace UserValueObjectErrors {
     }
   }
 
-  export class InvalidSecret {
+  export class InvalidSecretValue {
     public message: string
     public constructor(message: string) {
       this.message = message
     }
   }
 
-  export class InvalidSecretComparison {
+  export class InvalidSecretValueComparison {
     public message: string
     public constructor(message: string) {
       this.message = message

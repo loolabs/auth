@@ -13,8 +13,8 @@ describe('UserPassword ValueObject', () => {
     })
 
     expect(passwordResult.isErr())
-    const passwordErr = passwordResult as Err<UserPassword, UserValueObjectErrors.InvalidSecret>
-    expect(passwordErr.error instanceof UserValueObjectErrors.InvalidSecret).toBe(true)
+    const passwordErr = passwordResult as Err<UserPassword, UserValueObjectErrors.InvalidSecretValue>
+    expect(passwordErr.error instanceof UserValueObjectErrors.InvalidSecretValue).toBe(true)
   })
 
   test('When a Password is asked for hash value, it returns the hashed value instead of raw password', async () => {

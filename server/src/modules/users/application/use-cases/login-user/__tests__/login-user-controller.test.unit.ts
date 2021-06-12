@@ -64,7 +64,7 @@ describe('LoginUserController', () => {
     jest
       .spyOn(LoginUserUseCase.prototype, 'execute')
       .mockResolvedValue(
-        Result.err(new UserValueObjectErrors.InvalidSecret(userDTO.password))
+        Result.err(new UserValueObjectErrors.InvalidSecretValue(userDTO.password))
       )
 
     const result = await loginUserController.executeImpl(loginUserDTO, mockResponse)

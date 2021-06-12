@@ -11,7 +11,7 @@ export class AuthCodeMap {
     const authCode = AuthCode.create(
       {
         clientId: authCodeEntity.clientId,
-        authCode: new AuthCodeString(authCodeEntity.authCode)
+        authCodeString: new AuthCodeString(authCodeEntity.authCodeString)
       },
       new UniqueEntityID(authCodeEntity.id)
     )
@@ -23,7 +23,7 @@ export class AuthCodeMap {
   public static async toPersistence(authCode: AuthCode): Promise<AuthCodeEntity> {
     const authCodeEntity = new AuthCodeEntity()
     authCodeEntity.clientId = authCode.clientId
-    authCodeEntity.authCode = authCode.authCode.getValue()
+    authCodeEntity.authCodeString = authCode.authCodeString.getValue()
 
     return authCodeEntity
   }

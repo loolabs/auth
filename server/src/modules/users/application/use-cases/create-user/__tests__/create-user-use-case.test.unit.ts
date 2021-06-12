@@ -53,8 +53,8 @@ describe('CreateUserUseCase', () => {
     const createUserResult = await createUserUseCase.execute(createUserDTO)
 
     expect(createUserResult.isErr()).toBe(true)
-    const createUserErr = createUserResult as Err<CreateUserSuccess, UserValueObjectErrors.InvalidSecret>
-    expect(createUserErr.error instanceof UserValueObjectErrors.InvalidSecret).toBe(true)
+    const createUserErr = createUserResult as Err<CreateUserSuccess, UserValueObjectErrors.InvalidSecretValue>
+    expect(createUserErr.error instanceof UserValueObjectErrors.InvalidSecretValue).toBe(true)
   })
 
   test('When executed with email that already exists, should return CreateUserErrors.EmailAlreadyExistsError', async () => {

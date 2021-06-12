@@ -48,8 +48,8 @@ export abstract class EncryptedSecret extends ValueObject<EncryptedSecretProps> 
     })
   }
 
-  public async compareSecret(hashedSecret: string): Promise<Result<boolean, UserValueObjectErrors.InvalidSecretComparison>> {
-    if (this.isAlreadyHashed()) return Result.err(new UserValueObjectErrors.InvalidSecretComparison("Comparing two hashed secrets"))
+  public async compareSecret(hashedSecret: string): Promise<Result<boolean, UserValueObjectErrors.InvalidSecretValueComparison>> {
+    if (this.isAlreadyHashed()) return Result.err(new UserValueObjectErrors.InvalidSecretValueComparison("Comparing two hashed secrets"))
     return Result.ok(await this.bcryptCompare(this.value, hashedSecret))
   }
 
