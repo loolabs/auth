@@ -12,6 +12,9 @@ export class AuthCodeString {
   }
 
   private getRandomCode() {
+    /*motivation for a 256 bit (= 32 byte) crypographic key can be found here
+      https://www.geeksforgeeks.org/node-js-crypto-randombytes-method/
+    */
     const authCodeBuffer = crypto.randomBytes(32)
     return authCodeBuffer.toString('hex')
   }
