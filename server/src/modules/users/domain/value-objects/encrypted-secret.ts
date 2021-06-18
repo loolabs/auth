@@ -29,14 +29,12 @@ export abstract class EncryptedSecret extends ValueObject<EncryptedSecretProps> 
     return this.props.hashed
   }
 
-  public getHashedValue(): Promise<string> {
-    return new Promise((resolve) => {
-      if (this.isHashed) {
-        return resolve(this.props.value)
-      } else {
-        return resolve(this.hashSecret(this.props.value))
-      }
-    })
+  public async getHashedValue(): Promise<string> {
+    if (this.isHashed) {
+      return this.props.value
+    } else {
+      return this.hashSecret(this.props.value)
+    }
   }
 
   protected hashSecret(secret: string): Promise<string> {
