@@ -3,7 +3,7 @@ import { UserValueObjectErrors } from '../errors'
 import { UserPassword } from '../user-password'
 
 describe('UserPassword ValueObject', () => {
-  test('When created with a password value that is too small, it returns UserValueObjectErrors.InvalidSecret', () => {
+  test('When created with a password value that is too small, it returns UserValueObjectErrors.InvalidSecretValue', () => {
     const tooSmallOfAPassword = '2shrt'
     const hashed = false
 
@@ -45,7 +45,7 @@ describe('UserPassword ValueObject', () => {
     expect(passwordResult.isOk())
     if (passwordResult.isErr()) throw new Error('Password result should be isOk, not isErr')
     const password = passwordResult.value
-    expect(password.isAlreadyHashed()).toBe(false)
+    expect(password.isHashed).toBe(false)
   })
 
   test('When a Password is compared with its hashed original value, it reports them to be the same', async () => {
@@ -70,6 +70,7 @@ describe('UserPassword ValueObject', () => {
     const passwordsEqualResult = await password.compareSecret(await duplicatePassword.getHashedValue())
     
     const passwordsEqual = passwordsEqualResult.isOk() && passwordsEqualResult.value
+    console.log(passwordsEqual)
     expect(passwordsEqual).toBe(true)
   })
 

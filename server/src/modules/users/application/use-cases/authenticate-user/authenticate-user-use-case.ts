@@ -1,7 +1,7 @@
 import { UseCaseWithDTO } from '../../../../../shared/app/use-case-with-dto'
 import { AppError } from '../../../../../shared/core/app-error'
 import { Result } from '../../../../../shared/core/result'
-import { User } from '../../../domain/entities/user/user'
+import { User } from '../../../domain/entities/user'
 import { UserEmail } from '../../../domain/value-objects/user-email'
 import { UserPassword } from '../../../domain/value-objects/user-password'
 import { UserRepo } from '../../../infra/repos/user-repo/user-repo'

@@ -1,5 +1,5 @@
 import { Err, Result } from '../../../../../../shared/core/result'
-import { User } from '../../../../domain/entities/user/user'
+import { User } from '../../../../domain/entities/user'
 import { GetUserDTO } from '../get-user-dto'
 import { GetUserUseCase } from '../get-user-use-case'
 import { GetUserErrors } from '../get-user-errors'

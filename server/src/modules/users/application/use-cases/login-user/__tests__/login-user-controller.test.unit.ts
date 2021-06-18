@@ -59,7 +59,7 @@ describe('LoginUserController', () => {
     expect(result.statusCode).toBe(400)
   })
 
-  test('When the LoginUserUseCase returns UserValueObjectErrors.InvalidSecret, LoginUserController returns 400 Bad Request', async () => {
+  test('When the LoginUserUseCase returns UserValueObjectErrors.InvalidSecretValue, LoginUserController returns 400 Bad Request', async () => {
     const mockResponse = httpMocks.createResponse()
     jest
       .spyOn(LoginUserUseCase.prototype, 'execute')

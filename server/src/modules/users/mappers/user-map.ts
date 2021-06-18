@@ -1,6 +1,6 @@
 import { UniqueEntityID } from '../../../shared/domain/unique-entity-id'
 import { UserEntity } from '../../../shared/infra/db/entities/user.entity'
-import { User } from '../domain/entities/user/user'
+import { User } from '../domain/entities/user'
 import { UserEmail } from '../domain/value-objects/user-email'
 import { UserPassword } from '../domain/value-objects/user-password'
 import { UserDTO } from './user-dto'
@@ -44,7 +44,7 @@ export class UserMap {
   }
 
   public static async toPersistence(user: User): Promise<UserEntity> {
-    const password = user.password.isAlreadyHashed()
+    const password = user.password.isHashed
       ? user.password.value
       : await user.password.getHashedValue()
 

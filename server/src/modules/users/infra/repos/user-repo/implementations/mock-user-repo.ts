@@ -1,4 +1,4 @@
-import { User } from '../../../../domain/entities/user/user'
+import { User } from '../../../../domain/entities/user'
 import { UserEmail } from '../../../../domain/value-objects/user-email'
 import { UserEntity } from '../../../../../../shared/infra/db/entities/user.entity'
 import { UserRepo } from '../user-repo'

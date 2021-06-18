@@ -9,7 +9,7 @@ export interface EncryptedClientSecretProps {
 
 export class EncryptedClientSecret extends EncryptedSecret {
   protected static minLength: number = 64
-
+  
   public static create(
     props: EncryptedClientSecretProps
   ): Result<EncryptedClientSecret, UserValueObjectErrors.InvalidSecretValue> {

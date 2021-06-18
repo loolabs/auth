@@ -1,7 +1,7 @@
 import { UniqueEntityID } from '../../../shared/domain/unique-entity-id'
 import { AuthCodeEntity } from '../../../shared/infra/db/entities/auth-code.entity'
 
-import { AuthCode } from '../domain/entities/auth-code/auth-code'
+import { AuthCode } from '../domain/entities/auth-code'
 import { AuthCodeString } from '../domain/value-objects/auth-code'
 
 export class AuthCodeMap {

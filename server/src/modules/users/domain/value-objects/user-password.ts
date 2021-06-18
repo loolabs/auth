@@ -8,7 +8,7 @@ export interface UserPasswordProps {
 }
 
 export class UserPassword extends EncryptedSecret {
-  protected static minLength: number = 6
+  protected static minLength: number = 8
 
   public static create(
     props: UserPasswordProps

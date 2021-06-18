@@ -25,13 +25,13 @@ export abstract class EncryptedSecret extends ValueObject<EncryptedSecretProps> 
     return this.props.value
   }
 
-  public isAlreadyHashed(): boolean {
+  get isHashed(): boolean {
     return this.props.hashed
   }
 
   public getHashedValue(): Promise<string> {
     return new Promise((resolve) => {
-      if (this.isAlreadyHashed()) {
+      if (this.isHashed) {
         return resolve(this.props.value)
       } else {
         return resolve(this.hashSecret(this.props.value))
@@ -41,7 +41,11 @@ export abstract class EncryptedSecret extends ValueObject<EncryptedSecretProps> 
 
   protected hashSecret(secret: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      bcrypt.hash(secret, 10, (err, hash) => {
+      let bcryptSaltRounds = 10 //default bcrypt salt rounds
+      if(process.env.BCRYPT_SALT_ROUNDS){
+        bcryptSaltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS)
+      } 
+      bcrypt.hash(secret, bcryptSaltRounds, (err, hash) => {
         if (err) return reject(err)
         resolve(hash)
       })
@@ -49,14 +53,17 @@ export abstract class EncryptedSecret extends ValueObject<EncryptedSecretProps> 
   }
 
   public async compareSecret(hashedSecret: string): Promise<Result<boolean, UserValueObjectErrors.InvalidSecretValueComparison>> {
-    if (this.isAlreadyHashed()) return Result.err(new UserValueObjectErrors.InvalidSecretValueComparison("Comparing two hashed secrets"))
-    return Result.ok(await this.bcryptCompare(this.value, hashedSecret))
+    if (this.isHashed) return Result.err(new UserValueObjectErrors.InvalidSecretValueComparison("Comparing two hashed secrets"))
+    return Result.ok(await this.compare(this.value, hashedSecret))
   }
 
-  protected bcryptCompare(plainText: string, hashed: string): Promise<boolean> {
+  protected compare(plainText: string, hashed: string): Promise<boolean> {
     return new Promise((resolve, _reject) => {
       bcrypt.compare(plainText, hashed, (err, compareResult) => {
-        if (err) return resolve(false)
+        if (err){
+          console.log("Error encountered in bcrypt compare", err.message)
+          return resolve(false)
+        } 
         return resolve(compareResult)
       })
     })

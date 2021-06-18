@@ -23,7 +23,7 @@ describe('CreateUserUseCase', () => {
   beforeEach(() => {
     createUserDTO = {
       email: 'john.doe@uwaterloo.ca',
-      password: 'secret',
+      password: 'secret23',
     }
   })
 
@@ -47,7 +47,7 @@ describe('CreateUserUseCase', () => {
     expect(createUserErr.error instanceof UserValueObjectErrors.InvalidEmail).toBe(true)
   })
 
-  test('When executed with invalid password, should return UserValueObjectErrors.InvalidSecret', async () => {
+  test('When executed with invalid password, should return UserValueObjectErrors.InvalidSecretValue', async () => {
     createUserDTO.password = '2shrt'
 
     const createUserResult = await createUserUseCase.execute(createUserDTO)

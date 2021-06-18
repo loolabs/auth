@@ -1,6 +1,6 @@
 import { Result } from '../../../../../shared/core/result'
 import { DBErrors } from '../../../../../shared/infra/db/errors/errors'
-import { User } from '../../../domain/entities/user/user'
+import { User } from '../../../domain/entities/user'
 import { UserEmail } from '../../../domain/value-objects/user-email'
 import { UserPassword } from '../../../domain/value-objects/user-password'
 

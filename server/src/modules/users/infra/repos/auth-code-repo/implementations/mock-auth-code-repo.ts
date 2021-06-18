@@ -1,7 +1,7 @@
 import { Result } from '../../../../../../shared/core/result'
 import { AuthCodeEntity } from '../../../../../../shared/infra/db/entities/auth-code.entity'
 import { DBError, DBErrors } from '../../../../../../shared/infra/db/errors/errors'
-import { AuthCode } from '../../../../domain/entities/auth-code/auth-code'
+import { AuthCode } from '../../../../domain/entities/auth-code'
 import { AuthCodeString } from '../../../../domain/value-objects/auth-code'
 import { AuthCodeMap } from '../../../../mappers/auth-code-map'
 import { AuthCodeRepo } from '../auth-code-repo'
@@ -18,7 +18,7 @@ export class MockAuthCodeRepo implements AuthCodeRepo {
   async getAuthCodeFromAuthCodeString(authCodeString: AuthCodeString): Promise<Result<AuthCode, DBErrors>> {
     const authCodeEntity = this.authCodeEntities.get(authCodeString.getValue())
 
-    if(!authCodeEntity){
+    if(authCodeEntity === undefined){
       return Result.err(new DBError.AuthCodeNotFoundError(authCodeString.getValue()))
     }
     return Result.ok(AuthCodeMap.toDomain(authCodeEntity))

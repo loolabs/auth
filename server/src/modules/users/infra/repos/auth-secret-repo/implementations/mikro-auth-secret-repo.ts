@@ -2,7 +2,7 @@ import { EntityRepository } from '@mikro-orm/core'
 import { Result } from '../../../../../../shared/core/result'
 import { AuthSecretEntity } from '../../../../../../shared/infra/db/entities/auth-secret.entity'
 import { DBError, DBErrors } from '../../../../../../shared/infra/db/errors/errors'
-import { AuthSecret } from '../../../../domain/entities/auth-secret/auth-secret'
+import { AuthSecret } from '../../../../domain/entities/auth-secret'
 import { AuthSecretMap } from '../../../../mappers/auth-secret-map'
 import { AuthSecretRepo } from '../../auth-secret-repo/auth-secret-repo'
 

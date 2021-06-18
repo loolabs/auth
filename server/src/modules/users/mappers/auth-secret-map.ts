@@ -1,6 +1,6 @@
 import { UniqueEntityID } from '../../../shared/domain/unique-entity-id'
 import { AuthSecretEntity } from '../../../shared/infra/db/entities/auth-secret.entity'
-import { AuthSecret } from '../domain/entities/auth-secret/auth-secret'
+import { AuthSecret } from '../domain/entities/auth-secret'
 import { EncryptedClientSecret } from '../domain/value-objects/encrypted-client-secret'
 
 export class AuthSecretMap {
