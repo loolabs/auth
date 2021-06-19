@@ -1,25 +1,22 @@
 version: '3.8'
 
 services:
-  server:
-    container_name: server
+  auth:
+    container_name: auth
     build:
-      context: ./server
-      # target: development
+      context: .
     volumes:
-      - ./server/src:/usr/src/app/src
+      - ./src:/usr/src/app/src
       - /usr/src/app/node_modules # isolate container's node_modules from local node_modules (different OS versions)
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
-    # command: npm run test:unit
-    # command: npm run test:integration
     command: npm run start:dev
     env_file:
       - .env
     depends_on:
       - db
   db:
-    container_name: postgres
+    container_name: postgres_auth
     image: postgres:13.1
     environment:
       POSTGRES_DB: ${DB_DATABASE_NAME}
