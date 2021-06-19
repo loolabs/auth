@@ -12,7 +12,7 @@ import { mocks } from '../../../../../../test-utils'
 import { CreateUserDTO } from '../../create-user/create-user-dto'
 
 // TODO: how to show developer these mocks are necessary when building a controller? aka must be synced with buildController()
-jest.mock('../../../../infra/repos/implementations/mikro-user-repo')
+jest.mock('../../../../infra/repos/user-repo/implementations/mikro-user-repo')
 jest.mock('../login-user-use-case')
 
 describe('LoginUserController', () => {
@@ -59,12 +59,12 @@ describe('LoginUserController', () => {
     expect(result.statusCode).toBe(400)
   })
 
-  test('When the LoginUserUseCase returns UserValueObjectErrors.InvalidPassword, LoginUserController returns 400 Bad Request', async () => {
+  test('When the LoginUserUseCase returns UserValueObjectErrors.InvalidSecretValue, LoginUserController returns 400 Bad Request', async () => {
     const mockResponse = httpMocks.createResponse()
     jest
       .spyOn(LoginUserUseCase.prototype, 'execute')
       .mockResolvedValue(
-        Result.err(new UserValueObjectErrors.InvalidPassword(userDTO.password))
+        Result.err(new UserValueObjectErrors.InvalidSecretValue(userDTO.password))
       )
 
     const result = await loginUserController.executeImpl(loginUserDTO, mockResponse)

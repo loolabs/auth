@@ -1,13 +1,13 @@
-import { Result } from '../../../../shared/core/result'
-import { AggregateRoot } from '../../../../shared/domain/aggregate-root'
-import { UniqueEntityID } from '../../../../shared/domain/unique-entity-id'
-import { UserCreated } from '../events/user-created'
-import { UserDeleted } from '../events/user-deleted'
-import { UserLoggedIn } from '../events/user-logged-in'
-import { JWTToken, RefreshToken } from '../value-objects/jwt'
-import { UserEmail } from '../value-objects/user-email'
-import { UserPassword } from '../value-objects/user-password'
-import { UserId } from '../value-objects/userId'
+import { Result } from '../../../../../shared/core/result'
+import { AggregateRoot } from '../../../../../shared/domain/aggregate-root'
+import { UniqueEntityID } from '../../../../../shared/domain/unique-entity-id'
+import { UserCreated } from '../../events/user-created'
+import { UserDeleted } from '../../events/user-deleted'
+import { UserLoggedIn } from '../../events/user-logged-in'
+import { JWTToken, RefreshToken } from '../../value-objects/jwt'
+import { UserEmail } from '../../value-objects/user-email'
+import { UserPassword } from '../../value-objects/user-password'
+import { UserId } from '../../value-objects/userId'
 
 interface UserProps {
   email: UserEmail

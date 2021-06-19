@@ -1,11 +1,11 @@
 import { EntityRepository } from '@mikro-orm/core'
-import { Result } from '../../../../../shared/core/result'
-import { UserEntity } from '../../../../../shared/infra/db/entities/user.entity'
-import { DBError, DBErrors } from '../../../../../shared/infra/db/errors/errors'
-import { User } from '../../../domain/entities/user'
-import { UserEmail } from '../../../domain/value-objects/user-email'
-import { UserPassword } from '../../../domain/value-objects/user-password'
-import { UserMap } from '../../../mappers/user-map'
+import { Result } from '../../../../../../shared/core/result'
+import { UserEntity } from '../../../../../../shared/infra/db/entities/user.entity'
+import { DBError, DBErrors } from '../../../../../../shared/infra/db/errors/errors'
+import { User } from '../../../../domain/entities/user'
+import { UserEmail } from '../../../../domain/value-objects/user-email'
+import { UserPassword } from '../../../../domain/value-objects/user-password'
+import { UserMap } from '../../../../mappers/user-map'
 import { UserRepo } from '../user-repo'
 
 export class MikroUserRepo implements UserRepo {
@@ -36,7 +36,7 @@ export class MikroUserRepo implements UserRepo {
     const user = await this.usersEntityRepo.findOne({ email: userEmail.value })
     if (user === null) return Result.err(new DBError.UserNotFoundError(userEmail.value))
         
-    const passwordsEqual = await userPassword.comparePassword(user.password)
+    const passwordsEqual = await userPassword.compareSecret(user.password)
     if(passwordsEqual.isOk() && !passwordsEqual.value){
       return Result.err(new DBError.PasswordsNotEqualError(userEmail.value))
     }

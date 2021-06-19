@@ -3,7 +3,7 @@ import { UserValueObjectErrors } from '../errors'
 import { UserPassword } from '../user-password'
 
 describe('UserPassword ValueObject', () => {
-  test('When created with a password value that is too small, it returns UserValueObjectErrors.InvalidPassword', () => {
+  test('When created with a password value that is too small, it returns UserValueObjectErrors.InvalidSecretValue', () => {
     const tooSmallOfAPassword = '2shrt'
     const hashed = false
 
@@ -13,8 +13,8 @@ describe('UserPassword ValueObject', () => {
     })
 
     expect(passwordResult.isErr())
-    const passwordErr = passwordResult as Err<UserPassword, UserValueObjectErrors.InvalidPassword>
-    expect(passwordErr.error instanceof UserValueObjectErrors.InvalidPassword).toBe(true)
+    const passwordErr = passwordResult as Err<UserPassword, UserValueObjectErrors.InvalidSecretValue>
+    expect(passwordErr.error instanceof UserValueObjectErrors.InvalidSecretValue).toBe(true)
   })
 
   test('When a Password is asked for hash value, it returns the hashed value instead of raw password', async () => {
@@ -45,7 +45,7 @@ describe('UserPassword ValueObject', () => {
     expect(passwordResult.isOk())
     if (passwordResult.isErr()) throw new Error('Password result should be isOk, not isErr')
     const password = passwordResult.value
-    expect(password.isAlreadyHashed()).toBe(false)
+    expect(password.isHashed).toBe(false)
   })
 
   test('When a Password is compared with its hashed original value, it reports them to be the same', async () => {
@@ -67,9 +67,10 @@ describe('UserPassword ValueObject', () => {
     const password = passwordResult.value
     const duplicatePassword = duplicatePasswordResult.value
 
-    const passwordsEqualResult = await password.comparePassword(await duplicatePassword.getHashedValue())
+    const passwordsEqualResult = await password.compareSecret(await duplicatePassword.getHashedValue())
     
     const passwordsEqual = passwordsEqualResult.isOk() && passwordsEqualResult.value
+    console.log(passwordsEqual)
     expect(passwordsEqual).toBe(true)
   })
 
@@ -94,7 +95,7 @@ describe('UserPassword ValueObject', () => {
     const password = passwordResult.value
     const duplicatePassword = duplicatePasswordResult.value
 
-    const passwordsEqualResult = await password.comparePassword(await duplicatePassword.getHashedValue())
+    const passwordsEqualResult = await password.compareSecret(await duplicatePassword.getHashedValue())
     
     const passwordsEqual = passwordsEqualResult.isOk() && passwordsEqualResult.value
     expect(passwordsEqual).toBe(false)

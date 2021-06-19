@@ -1,13 +1,13 @@
 import { mocks } from '../../../../../../test-utils'
 import { Err, Result } from '../../../../../../shared/core/result'
-import { UserRepo } from '../../../../infra/repos/user-repo'
+import { UserRepo } from '../../../../infra/repos/user-repo/user-repo'
 import { UserValueObjectErrors } from '../../../../domain/value-objects/errors'
 import { CreateUserDTO } from '../create-user-dto'
 import { CreateUserErrors } from '../create-user-errors'
 import { CreateUserSuccess, CreateUserUseCase } from '../create-user-use-case'
 import { DBError } from '../../../../../../shared/infra/db/errors/errors'
 
-jest.mock('../../../../infra/repos/implementations/mock-user-repo')
+jest.mock('../../../../infra/repos/user-repo/implementations/mock-user-repo')
 
 describe('CreateUserUseCase', () => {
   let createUserDTO: CreateUserDTO
@@ -23,7 +23,7 @@ describe('CreateUserUseCase', () => {
   beforeEach(() => {
     createUserDTO = {
       email: 'john.doe@uwaterloo.ca',
-      password: 'secret',
+      password: 'secret23',
     }
   })
 
@@ -47,14 +47,14 @@ describe('CreateUserUseCase', () => {
     expect(createUserErr.error instanceof UserValueObjectErrors.InvalidEmail).toBe(true)
   })
 
-  test('When executed with invalid password, should return UserValueObjectErrors.InvalidPassword', async () => {
+  test('When executed with invalid password, should return UserValueObjectErrors.InvalidSecretValue', async () => {
     createUserDTO.password = '2shrt'
 
     const createUserResult = await createUserUseCase.execute(createUserDTO)
 
     expect(createUserResult.isErr()).toBe(true)
-    const createUserErr = createUserResult as Err<CreateUserSuccess, UserValueObjectErrors.InvalidPassword>
-    expect(createUserErr.error instanceof UserValueObjectErrors.InvalidPassword).toBe(true)
+    const createUserErr = createUserResult as Err<CreateUserSuccess, UserValueObjectErrors.InvalidSecretValue>
+    expect(createUserErr.error instanceof UserValueObjectErrors.InvalidSecretValue).toBe(true)
   })
 
   test('When executed with email that already exists, should return CreateUserErrors.EmailAlreadyExistsError', async () => {

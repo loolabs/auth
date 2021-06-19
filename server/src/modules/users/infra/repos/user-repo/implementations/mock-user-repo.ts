@@ -1,11 +1,11 @@
-import { User } from '../../../domain/entities/user'
-import { UserEmail } from '../../../domain/value-objects/user-email'
-import { UserEntity } from '../../../../../shared/infra/db/entities/user.entity'
-import { UserMap } from '../../../mappers/user-map'
+import { User } from '../../../../domain/entities/user'
+import { UserEmail } from '../../../../domain/value-objects/user-email'
+import { UserEntity } from '../../../../../../shared/infra/db/entities/user.entity'
 import { UserRepo } from '../user-repo'
-import { Result } from '../../../../../shared/core/result'
-import { DBError, DBErrors } from '../../../../../shared/infra/db/errors/errors'
-import { UserPassword } from '../../../domain/value-objects/user-password'
+import { Result } from '../../../../../../shared/core/result'
+import { DBError, DBErrors } from '../../../../../../shared/infra/db/errors/errors'
+import { UserPassword } from '../../../../domain/value-objects/user-password'
+import { UserMap } from '../../../../mappers/user-map'
 
 export class MockUserRepo implements UserRepo {
   protected userEntities: Map<string, UserEntity>

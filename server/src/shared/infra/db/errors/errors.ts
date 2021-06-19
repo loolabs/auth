@@ -5,6 +5,18 @@ export namespace DBError {
       this.message = `The user with attribute (id/email) ${identifier} could not be found.`
     }
   }
+  export class AuthSecretNotFoundError {
+    public message: string
+    public constructor(identifier: string) {
+      this.message = `The client with attribute id ${identifier} could not be found.`
+    }
+  }
+  export class AuthCodeNotFoundError {
+    public message: string
+    public constructor(identifier: string) {
+      this.message = `The auth code ${identifier} could not be found.`
+    }
+  }
   export class PasswordsNotEqualError {
     public message: string
     public constructor(identifier: string) {
@@ -13,5 +25,8 @@ export namespace DBError {
   }
 }
 
-
-export type DBErrors = DBError.UserNotFoundError | DBError.PasswordsNotEqualError
+export type DBErrors = 
+DBError.UserNotFoundError 
+| DBError.AuthSecretNotFoundError 
+| DBError.AuthCodeNotFoundError 
+| DBError.PasswordsNotEqualError

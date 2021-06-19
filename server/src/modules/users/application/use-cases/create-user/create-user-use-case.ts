@@ -5,7 +5,7 @@ import { User } from '../../../domain/entities/user'
 import { UserValueObjectErrors } from '../../../domain/value-objects/errors'
 import { UserEmail } from '../../../domain/value-objects/user-email'
 import { UserPassword } from '../../../domain/value-objects/user-password'
-import { UserRepo } from '../../../infra/repos/user-repo'
+import { UserRepo } from '../../../infra/repos/user-repo/user-repo'
 import { CreateUserDTO } from './create-user-dto'
 import { CreateUserErrors } from './create-user-errors'
 import { UserMap } from '../../../mappers/user-map'
@@ -14,7 +14,7 @@ import { UserAuthHandler } from '../../../../../shared/auth/user-auth-handler'
 
 export type CreateUserUseCaseError =
   | UserValueObjectErrors.InvalidEmail
-  | UserValueObjectErrors.InvalidPassword
+  | UserValueObjectErrors.InvalidSecretValue
   | CreateUserErrors.EmailAlreadyExistsError
   | AppError.UnexpectedError
 

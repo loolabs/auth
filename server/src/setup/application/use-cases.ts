@@ -9,7 +9,7 @@ import { ProtectedUserUseCase } from '../../modules/users/application/use-cases/
 
 export const setupUseCases = (repos: Repos): UseCases => {
   return {
-    createUser: new CreateUserUseCase(repos.user),
+    createUser: new CreateUserUseCase(new PassportUserAuthHandler(), repos.user),
     loginUser: new LoginUserUseCase(new PassportUserAuthHandler()),
     getUser: new GetUserUseCase(repos.user),
     authUser: new AuthenticateUserUseCase(repos.user),

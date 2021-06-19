@@ -14,7 +14,7 @@ jest.mock('../create-user-use-case')
 describe('CreateUserController', () => {
   const createUserDTO: CreateUserDTO = {
     email: 'john.doe@uwaterloo.ca',
-    password: 'secret',
+    password: 'secret23',
   }
   let createUserController: CreateUserController
   beforeAll(async () => {
@@ -56,11 +56,11 @@ describe('CreateUserController', () => {
     expect(res.statusCode).toBe(400)
   })
 
-  test('When the CreateUserUseCase returns UserValueObjectErrors.InvalidPassword, CreateUserController returns 400 Bad Request', async () => {
+  test('When the CreateUserUseCase returns UserValueObjectErrors.InvalidSecretValue, CreateUserController returns 400 Bad Request', async () => {
     jest
       .spyOn(CreateUserUseCase.prototype, 'execute')
       .mockResolvedValue(
-        Result.err(new UserValueObjectErrors.InvalidPassword(createUserDTO.password))
+        Result.err(new UserValueObjectErrors.InvalidSecretValue(createUserDTO.password))
       )
 
     const { req, res } = mocks.mockHandlerParams(createUserDTO)

@@ -5,10 +5,10 @@ import { GetUserUseCase } from '../get-user-use-case'
 import { GetUserErrors } from '../get-user-errors'
 import { mocks } from '../../../../../../test-utils'
 import { CreateUserDTO } from '../../create-user/create-user-dto'
-import { UserRepo } from '../../../../infra/repos/user-repo'
+import { UserRepo } from '../../../../infra/repos/user-repo/user-repo'
 import { DBError } from '../../../../../../shared/infra/db/errors/errors'
 
-jest.mock('../../../../infra/repos/implementations/mikro-user-repo')
+jest.mock('../../../../infra/repos/user-repo/implementations/mikro-user-repo')
 
 describe('GetUserUseCase', () => {
   let userDTO: CreateUserDTO

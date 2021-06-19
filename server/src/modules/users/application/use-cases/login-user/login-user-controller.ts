@@ -40,7 +40,7 @@ export class LoginUserController extends ControllerWithDTO<LoginUserUseCase> {
         switch (error.constructor) {
           case UserValueObjectErrors.InvalidEmail:
             return this.clientError(res, error.message)
-          case UserValueObjectErrors.InvalidPassword:
+          case UserValueObjectErrors.InvalidSecretValue:
             return this.clientError(res, error.message)
           case LoginUserErrors.IncorrectPasswordError:
             return this.clientError(res, error.message)

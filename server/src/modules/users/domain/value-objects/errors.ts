@@ -1,22 +1,25 @@
 export namespace UserValueObjectErrors {
-  export class InvalidEmail {
-    public message: string
+  export class InvalidEmail extends Error{
     public constructor(email: string) {
-      this.message = `The email address, ${email} is invalid.`
+      super(`The email address, ${email} is invalid.`)
     }
   }
 
-  export class InvalidPassword {
-    public message: string
+  export class InvalidSecretValue extends Error{
     public constructor(message: string) {
-      this.message = message
+      super(message)
     }
   }
 
-  export class InvalidPasswordComparison {
-    public message: string
+  export class InvalidSecretValueComparison extends Error{
     public constructor(message: string) {
-      this.message = message
+      super(message)
+    }
+  }
+
+  export class InvalidCodeGenerated extends Error{
+    public constructor(message: string) {
+      super(message)
     }
   }
 }

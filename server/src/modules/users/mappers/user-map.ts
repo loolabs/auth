@@ -44,7 +44,7 @@ export class UserMap {
   }
 
   public static async toPersistence(user: User): Promise<UserEntity> {
-    const password = user.password.isAlreadyHashed()
+    const password = user.password.isHashed
       ? user.password.value
       : await user.password.getHashedValue()
 
