@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 1. `.env` in the root directory of the monorepo
 
 ```
-SERVER_PORT=3001
+SERVER_PORT=3002
 DB_DATABASE_NAME=clubs
 DB_USERNAME=waterpark
 DB_PASSWORD=waterpark
