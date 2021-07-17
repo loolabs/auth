@@ -25,6 +25,9 @@ describe('CreateUserUseCase', () => {
     createUserDTOBody = {
       email: 'john.doe@uwaterloo.ca',
       password: 'secret23',
+    },
+    createUserDTO = {
+      body: createUserDTOBody
     }
   })
 
