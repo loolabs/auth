@@ -1,5 +1,4 @@
 import httpMocks from 'node-mocks-http'
-import { UserAuthHandlerLoginSuccess } from '../../../../../../shared/auth/user-auth-handler'
 import { AppError } from '../../../../../../shared/core/app-error'
 import { Result } from '../../../../../../shared/core/result'
 import { UserValueObjectErrors } from '../../../../domain/value-objects/errors'
@@ -9,7 +8,7 @@ import { LoginUserErrors } from '../login-user-errors'
 import { LoginUserUseCase } from '../login-user-use-case'
 import { LoginUserController } from '../login-user-controller'
 import { mocks } from '../../../../../../test-utils'
-import { CreateUserDTO } from '../../create-user/create-user-dto'
+import { CreateUserDTOBody } from '../../create-user/create-user-dto'
 
 // TODO: how to show developer these mocks are necessary when building a controller? aka must be synced with buildController()
 jest.mock('../../../../infra/repos/user-repo/implementations/mikro-user-repo')
@@ -17,7 +16,7 @@ jest.mock('../login-user-use-case')
 
 describe('LoginUserController', () => {
   let loginUserDTO: LoginUserDTO
-  let userDTO: CreateUserDTO
+  let userDTO: CreateUserDTOBody
   let loginUserController: LoginUserController
 
   beforeAll(async () => {
@@ -26,21 +25,21 @@ describe('LoginUserController', () => {
   })
 
   beforeEach(() => {
-    loginUserDTO = {
-      req: httpMocks.createRequest(),
-      res: httpMocks.createResponse()
-    }
     userDTO = {
       email: 'loolabs@uwaterloo.ca',
       password: 'password',
+    },
+    loginUserDTO = {
+      req: httpMocks.createRequest(),
+      res: httpMocks.createResponse(),
+      body: userDTO,
     }
   })
 
   test('When the LoginUserUseCase returns Ok, the LoginUserController returns 200 OK', async () => {
     const user = mocks.mockUser(userDTO)
-    const useCaseResolvedValue: UserAuthHandlerLoginSuccess = {
+    const useCaseResolvedValue = {
       user: UserMap.toDTO(user),
-      authCert: "testtoken"
     }
     jest.spyOn(LoginUserUseCase.prototype, 'execute').mockResolvedValue(Result.ok(useCaseResolvedValue))
 

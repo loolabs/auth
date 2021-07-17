@@ -8,20 +8,29 @@ import { UserPassword } from '../../../domain/value-objects/user-password'
 import { UserRepo } from '../../../infra/repos/user-repo/user-repo'
 import { CreateUserDTO } from './create-user-dto'
 import { CreateUserErrors } from './create-user-errors'
-import { UserMap } from '../../../mappers/user-map'
-import { UserDTO } from '../../../mappers/user-dto'
 import { UserAuthHandler } from '../../../../../shared/auth/user-auth-handler'
+import { ParamList, ParamPair } from '../../../../../shared/app/param-list'
+import { UserDTO } from '../../../mappers/user-dto'
+import { UserMap } from '../../../mappers/user-map'
 
 export type CreateUserUseCaseError =
   | UserValueObjectErrors.InvalidEmail
   | UserValueObjectErrors.InvalidSecretValue
   | CreateUserErrors.EmailAlreadyExistsError
+  | CreateUserErrors.InvalidOpenIDParamsError
   | AppError.UnexpectedError
 
-export type CreateUserSuccess = {
-  user: UserDTO,
-  token: string
-}
+export interface CreateUserClientRequestSuccess { 
+  redirectParams: ParamList,
+  redirectUrl: string
+}  
+
+export interface CreateUserNonClientRequestSuccess {
+  user: UserDTO
+}  
+
+// TODO: perhaps better to decouple these into separate use-cases or further subclasses
+export type CreateUserSuccess = CreateUserClientRequestSuccess | CreateUserNonClientRequestSuccess
 
 export type CreateUserUseCaseResponse = Result<CreateUserSuccess, CreateUserUseCaseError>
 
@@ -29,9 +38,14 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
   constructor(private authHandler: UserAuthHandler, private userRepo: UserRepo) {}
 
   async execute(dto: CreateUserDTO): Promise<CreateUserUseCaseResponse> {
-    const emailResult = UserEmail.create(dto.email)
+    if(dto.params && dto.params.scope){
+      if(dto.params.scope !== 'openid' || dto.params.response_type !== 'code'){
+        return Result.err(new CreateUserErrors.InvalidOpenIDParamsError())
+      }
+    } 
+    const emailResult = UserEmail.create(dto.body.email)
     const passwordResult = UserPassword.create({
-      value: dto.password,
+      value: dto.body.password,
       hashed: false,
     })
 
@@ -61,18 +75,32 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
       const updatedUser = await this.userRepo.getUserByUserEmail(email);
       if(updatedUser.isErr())
         return Result.err(new AppError.UnexpectedError(updatedUser.error.message))
-      
-      const tokenResponse = await this.authHandler.create(updatedUser.value.id.toString())
 
-      if(tokenResponse.isErr())
-        return tokenResponse
-
-      const createUserSuccessResponse: CreateUserSuccess = {
-        user: UserMap.toDTO(user),
-        token: tokenResponse.value
+      if(!dto.params || !dto.params.scope){
+        return Result.ok({
+          user: UserMap.toDTO(updatedUser.value)
+        })
+      } else {
+        const userAuthHandlerCreateOptions = {
+          userId: updatedUser.value.id.toString(),
+          clientId: dto.params.client_id
+        } 
+        const authHandlerResponse = await this.authHandler.create(userAuthHandlerCreateOptions)
+  
+        if(authHandlerResponse.isErr())
+          return authHandlerResponse
+        
+        const redirectParams = new ParamList([
+          new ParamPair('code', authHandlerResponse.value.getValue())
+        ])
+        const createUserSuccessResponse: CreateUserSuccess = {
+          redirectParams: redirectParams,
+          redirectUrl: dto.params.redirect_uri
+        }
+  
+        return Result.ok(createUserSuccessResponse)
       }
-
-      return Result.ok(createUserSuccessResponse)
+            
     } catch (err) {
       return Result.err(new AppError.UnexpectedError(err))
     }

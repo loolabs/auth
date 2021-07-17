@@ -9,6 +9,9 @@ export class AuthCodeEntity extends BaseEntity {
   clientId!: string
 
   @Property()
+  userId!: string
+
+  @Property()
   @Index()
   authCodeString!: string
 

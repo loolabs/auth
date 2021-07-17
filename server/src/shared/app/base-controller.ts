@@ -1,4 +1,5 @@
 import express from 'express'
+import { ParamList } from './param-list'
 export abstract class BaseController {
   public abstract execute<Res extends express.Response>(
     req: express.Request,
@@ -12,6 +13,11 @@ export abstract class BaseController {
     } else {
       return res.sendStatus(200)
     }
+  }
+
+  public redirect<Res extends express.Response>(res: Res, url: string, params: ParamList) {
+    res.status(200).redirect(params.getFormattedUrlWithParams(url))
+    return this.ok(res)
   }
 
   public fail<Res extends express.Response>(res: Res, error: Error | string): Res {

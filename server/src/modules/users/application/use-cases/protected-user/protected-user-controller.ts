@@ -10,7 +10,10 @@ export class ProtectedUserController extends ControllerWithDTO<ProtectedUserUseC
 
   buildDTO(req: express.Request): Result<ProtectedUserDTO, Array<ValidationError>> {
     const errs: Array<ValidationError> = []
-    const bodyResult = this.validate(req.body, protectedUserDTOSchema)
+    const compiledBody = {
+      user: req.user
+    }
+    const bodyResult = this.validate(compiledBody, protectedUserDTOSchema)
     if (bodyResult.isOk()) {
       const body = bodyResult.value
       return Result.ok(body)

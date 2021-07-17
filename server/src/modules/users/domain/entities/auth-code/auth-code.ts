@@ -6,6 +6,7 @@ import { AuthCodeString } from '../../value-objects/auth-code'
 
 interface AuthCodeProps {
   clientId: string,
+  userId: string,
   authCodeString: AuthCodeString
 }
 
@@ -32,7 +33,12 @@ export class AuthCode extends AggregateRoot<AuthCodeProps> {
     return this.props.clientId
   }
 
+  get userId(): string {
+    return this.props.userId
+  }
+
   get authCodeString(): AuthCodeString {
     return this.props.authCodeString
   }
+  
 }

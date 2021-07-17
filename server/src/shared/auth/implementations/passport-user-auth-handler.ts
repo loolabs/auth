@@ -1,35 +1,63 @@
 import passport from 'passport'
-import express from 'express'
-import { sign } from 'jsonwebtoken'
 import { Result } from '../../core/result'
-import { JWT_SECRET } from '../../core/secret'
-//import '../../auth'
-import { UserMap } from '../../../modules/users/mappers/user-map'
 import { AuthenticateUserUseCaseResponse } from '../../../modules/users/application/use-cases/authenticate-user/authenticate-user-use-case'
-import { AuthToken, UserAuthHandler, UserAuthHandlerCreateResponse, UserAuthHandlerLoginResponse, UserAuthHandlerLoginSuccess } from '../user-auth-handler'
+import { UserAuthHandler, UserAuthHandlerCreateOptions, UserAuthHandlerCreateResponse, UserAuthHandlerLoginOptions, UserAuthHandlerLoginResponse, UserAuthHandlerLoginSuccess } from '../user-auth-handler'
+import { AuthCode } from '../../../modules/users/domain/entities/auth-code'
+import { AuthCodeString } from '../../../modules/users/domain/value-objects/auth-code'
+import { UserMap } from '../../../modules/users/mappers/user-map'
 
-export const JWT_EXPIRY_TIME_IN_SECONDS =  604800; //1 week = 604800 seconds
  
 //add implementation-specific auth functions here
 export class PassportUserAuthHandler implements UserAuthHandler {
 
-  async login(req: express.Request, res: express.Response): Promise<UserAuthHandlerLoginResponse> {
+  async login(options: UserAuthHandlerLoginOptions): Promise<UserAuthHandlerLoginResponse> {
     return new Promise((resolve) => {
       passport.authenticate("local", function(err, user: AuthenticateUserUseCaseResponse) {
         if (err) resolve(Result.err(err))
         if (user.isErr()) {
           resolve(Result.err(user.error))
-        } else {
-          const token: AuthToken = sign({ userId: user.value.id.toString() }, JWT_SECRET, {expiresIn: JWT_EXPIRY_TIME_IN_SECONDS})
-          const successResponse: UserAuthHandlerLoginSuccess = { user: UserMap.toDTO(user.value), authCert: token}
-          resolve(Result.ok(successResponse))
+        } else { 
+          if(!options.params){
+            const successResponse: UserAuthHandlerLoginSuccess = {user: UserMap.toDTO(user.value)}
+            options.req.login(user.value, function(err) {
+              if(err) {
+                resolve(Result.err(err))
+              } else {
+                resolve(Result.ok(successResponse))
+              }
+            });
+          }
+          const authCode = AuthCode.create({
+            clientId: options.clientId, 
+            userId: user.value.userId.id.toString(),
+            authCodeString: new AuthCodeString()
+          })
+          if(authCode.isErr()){
+            resolve(Result.err(authCode.error))
+          } else {
+            const successResponse: UserAuthHandlerLoginSuccess = { cert: authCode.value.authCodeString, user: UserMap.toDTO(user.value)}
+            options.req.login(user.value, function(err) {
+              if(err) {
+                resolve(Result.err(err))
+              } else {
+                resolve(Result.ok(successResponse))
+              }
+            });
+          }
         }
-      })(req,res);
+      })(options.req, options.res);
     })
   }
 
-  async create(userId: string): Promise<UserAuthHandlerCreateResponse> {
-    const token = sign({ userId: userId }, JWT_SECRET, {expiresIn: JWT_EXPIRY_TIME_IN_SECONDS});
-    return Result.ok(token)
+  async create(options: UserAuthHandlerCreateOptions): Promise<UserAuthHandlerCreateResponse> {
+    const authCode = AuthCode.create({
+      clientId: options.clientId, 
+      userId: options.userId,
+      authCodeString: new AuthCodeString()
+    })
+    if(authCode.isErr()){
+      return Result.err(authCode.error)
+    }
+    return Result.ok(authCode.value.authCodeString)
   }
 }

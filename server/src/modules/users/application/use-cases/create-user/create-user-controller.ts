@@ -13,8 +13,16 @@ export class CreateUserController extends ControllerWithDTO<CreateUserUseCase> {
   }
 
   buildDTO(req: express.Request): Result<CreateUserDTO, Array<ValidationError>> {
+    let params: any = req.params
+    if(!Object.keys(req.params).length){
+      params = undefined
+    }
     const errs: Array<ValidationError> = []
-    const bodyResult = this.validate(req.body, createUserDTOSchema)
+    const compiledRequest = {
+      body: req.body,
+      params 
+    }
+    const bodyResult = this.validate(compiledRequest, createUserDTOSchema)
     if (bodyResult.isOk()) {
       const body = bodyResult.value
       return Result.ok(body)
@@ -29,7 +37,11 @@ export class CreateUserController extends ControllerWithDTO<CreateUserUseCase> {
       const result = await this.useCase.execute(dto)
       
       if (result.isOk()) {
-        return this.ok(res, result.value)
+        if('user' in result.value){
+          return this.ok(res, result.value)
+        } else {
+          return this.redirect(res, result.value.redirectUrl, result.value.redirectParams)
+        }
       } else {
         const error = result.error
 

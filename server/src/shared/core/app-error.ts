@@ -1,8 +1,7 @@
 export namespace AppError {
-  export class UnexpectedError {
-    public message: string
+  export class UnexpectedError extends Error {
     public constructor(error: string) {
-      this.message = error
+      super(error)
     }
   }
 }

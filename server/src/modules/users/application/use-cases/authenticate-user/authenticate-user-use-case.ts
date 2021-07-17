@@ -41,7 +41,6 @@ export class AuthenticateUserUseCase
       const userByEmailAndPassword = await this.userRepo.getUserByUserEmailandUserPassword(email, password)
       if (userByEmailAndPassword.isErr())
         return Result.err(new AuthenticateUserErrors.AuthenticationFailedError(email.value, userByEmailAndPassword.error.message))
-
       return Result.ok(userByEmailAndPassword.value)
     } catch (err) {
       return Result.err(new AppError.UnexpectedError(err))
