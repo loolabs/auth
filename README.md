@@ -12,17 +12,17 @@
 
 ## Sample Environment Variables
 
-SERVER_PORT=3002
-DB_DATABASE_NAME=auth
-DB_USERNAME=loolabs
-DB_PASSWORD=loolabs
-DB_PORT=5432
-CACHE_PORT=6379
-CACHE_PASSWORD=km0dSTMWNNhBdFA4
-CACHE_URL=redis://cache
-DATABASE_URL=postgresql://loolabs:loolabs@db/auth
-IS_DATABASE_LOCAL=true
-BCRYPT_SALT_ROUNDS=10
+SERVER_PORT=3002<br />
+DB_DATABASE_NAME=auth<br />
+DB_USERNAME=loolabs<br />
+DB_PASSWORD=loolabs<br />
+DB_PORT=5432<br />
+CACHE_PORT=6379<br />
+CACHE_PASSWORD=km0dSTMWNNhBdFA4<br />
+CACHE_URL=redis://cache<br />
+DATABASE_URL=postgresql://loolabs:loolabs@db/auth<br />
+IS_DATABASE_LOCAL=true<br />
+BCRYPT_SALT_ROUNDS=10<br />
 EXPRESS_SESSION_SECRET=hhJwJqzDza7EWRiO
 
 ## Documentation
