@@ -16,7 +16,7 @@ export class LoginUserController extends ControllerWithDTO<LoginUserUseCase> {
   buildDTO(req: express.Request, res: express.Response): Result<LoginUserDTO, Array<ValidationError>> {
     const errs: Array<ValidationError> = []
     let params: any = req.params
-    if(!Object.keys(req.params).length){
+    if(Object.keys(req.params).length === 0){
       params = undefined
     }
     const compiledValidationBody = {

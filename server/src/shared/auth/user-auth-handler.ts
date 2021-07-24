@@ -27,7 +27,7 @@ export interface UserAuthHandlerLoginOptions {
 
 //creation
 export type UserAuthHandlerCreateSuccess = AuthCertificate
-export type UserAuthHandlerCreateError = Error
+export type UserAuthHandlerCreateError = AppError.UnexpectedError
 export type UserAuthHandlerCreateResponse = Result<UserAuthHandlerCreateSuccess, UserAuthHandlerCreateError> 
 
 export interface UserAuthHandlerCreateOptions {

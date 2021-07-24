@@ -1,4 +1,4 @@
-import { AfterCreate, Entity, Property, Index } from '@mikro-orm/core'
+import { AfterCreate, Entity, Property, EventArgs, Index } from '@mikro-orm/core'
 import { DomainEvents } from '../../../domain/events/domain-events'
 import { UniqueEntityID } from '../../../domain/unique-entity-id'
 import { BaseEntity } from './base.entity'
@@ -15,9 +15,8 @@ export class AuthCodeEntity extends BaseEntity {
   @Index()
   authCodeString!: string
 
-  // TODO: fix any type
   @AfterCreate()
-  afterCreate(target: any) {
+  afterCreate(target: EventArgs<AuthCodeEntity>) {
     const id = target.entity.id
     const aggregateId = new UniqueEntityID(id)
     DomainEvents.dispatchEventsForAggregate(aggregateId)

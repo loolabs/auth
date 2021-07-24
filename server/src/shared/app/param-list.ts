@@ -14,11 +14,7 @@ export class ParamList {
     }
 
     public getFormattedUrlWithParams(url: string) : string {
-        const firstPair = this.list[0]
-        let formattedUrl = url+`?${firstPair.name}=${firstPair.value}`
-        this.list.splice(0, 1).forEach(pair => {
-            formattedUrl+=`&${pair.name}=${pair.value}`
-        })
-        return formattedUrl
+        //generate appropriate url param suffix given the paramlist
+        return url + '?' + this.list.map(({ name, value }) => `${name}=${value}`).join('&')
     }
 }

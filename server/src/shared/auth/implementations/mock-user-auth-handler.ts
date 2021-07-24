@@ -19,11 +19,11 @@ export class MockUserAuthHandler implements UserAuthHandler {
             resolve(Result.err(new AppError.UnexpectedError(LOGIN_ERROR)))
         } else {
             const authCodeString = new AuthCodeString('test_authcode_string')
-            const createUserDTO: CreateUserDTOBody = {
+            const createUserDTObody: CreateUserDTOBody = {
               email: 'john.doe@uwaterloo.ca',
               password: 'secret23',
             }
-            const user = mocks.mockUser(createUserDTO)
+            const user = mocks.mockUser(createUserDTObody)
             const successResponse: UserAuthHandlerLoginSuccess = { cert: authCodeString, user: UserMap.toDTO(user)}
             resolve(Result.ok(successResponse))
         }

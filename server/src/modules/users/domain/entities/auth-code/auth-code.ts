@@ -1,3 +1,4 @@
+import { AppError } from '../../../../../shared/core/app-error'
 import { Result } from '../../../../../shared/core/result'
 import { AggregateRoot } from '../../../../../shared/domain/aggregate-root'
 import { UniqueEntityID } from '../../../../../shared/domain/unique-entity-id'
@@ -11,7 +12,7 @@ interface AuthCodeProps {
 }
 
 export class AuthCode extends AggregateRoot<AuthCodeProps> {
-  public static create(props: AuthCodeProps, id?: UniqueEntityID): Result<AuthCode, Error> {
+  public static create(props: AuthCodeProps, id?: UniqueEntityID): Result<AuthCode, AppError.UnexpectedError> {
     const isNewAuthCode = (id === undefined)
     const authCode = new AuthCode(
       {

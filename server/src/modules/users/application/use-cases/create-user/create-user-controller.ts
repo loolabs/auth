@@ -14,7 +14,7 @@ export class CreateUserController extends ControllerWithDTO<CreateUserUseCase> {
 
   buildDTO(req: express.Request): Result<CreateUserDTO, Array<ValidationError>> {
     let params: any = req.params
-    if(!Object.keys(req.params).length){
+    if(Object.keys(req.params).length === 0){
       params = undefined
     }
     const errs: Array<ValidationError> = []
