@@ -5,6 +5,7 @@ import { GetUserUseCase } from '../../modules/users/application/use-cases/get-us
 import { AuthenticateUserUseCase } from '../../modules/users/application/use-cases/authenticate-user/authenticate-user-use-case'
 import { LoginUserController } from '../../modules/users/application/use-cases/login-user/login-user-controller'
 import { ProtectedUserUseCase } from '../../modules/users/application/use-cases/protected-user/protected-user-use-case'
+import { ProtectedUserController } from '../../modules/users/application/use-cases/protected-user/protected-user-controller'
 
 export interface UseCases {
   createUser: CreateUserUseCase
@@ -16,7 +17,8 @@ export interface UseCases {
 
 export interface Controllers {
   createUser: CreateUserController
-  loginUser: LoginUserController
+  loginUser: LoginUserController,
+  protectedUser: ProtectedUserController
 }
 
 export interface Application {

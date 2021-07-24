@@ -1,9 +1,10 @@
 import Joi from 'joi'
+import { User } from '../../../domain/entities/user'
 
 export interface ProtectedUserDTO {
-  val: string
+  user: User
 }
 
 export const protectedUserDTOSchema = Joi.object<ProtectedUserDTO>({
-  val: Joi.string().required()
+  user: Joi.object().required()
 }).options({ abortEarly: false })

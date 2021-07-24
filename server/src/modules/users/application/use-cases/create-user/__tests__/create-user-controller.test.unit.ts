@@ -3,7 +3,7 @@ import { AppError } from '../../../../../../shared/core/app-error'
 import { Result } from '../../../../../../shared/core/result'
 import { UserValueObjectErrors } from '../../../../domain/value-objects/errors'
 import { CreateUserController } from '../create-user-controller'
-import { CreateUserDTO } from '../create-user-dto'
+import { CreateUserDTOBody } from '../create-user-dto'
 import { CreateUserErrors } from '../create-user-errors'
 import { CreateUserSuccess, CreateUserUseCase } from '../create-user-use-case'
 import { UserMap } from '../../../../mappers/user-map'
@@ -12,7 +12,7 @@ import { UserMap } from '../../../../mappers/user-map'
 jest.mock('../create-user-use-case')
 
 describe('CreateUserController', () => {
-  const createUserDTO: CreateUserDTO = {
+  const createUserDTO: CreateUserDTOBody = {
     email: 'john.doe@uwaterloo.ca',
     password: 'secret23',
   }
@@ -27,7 +27,6 @@ describe('CreateUserController', () => {
 
     const useCaseResolvedValue: CreateUserSuccess = {
       user: UserMap.toDTO(user),
-      token: "testtoken"
     }
     
     jest.spyOn(CreateUserUseCase.prototype, 'execute').mockResolvedValue(Result.ok(useCaseResolvedValue))

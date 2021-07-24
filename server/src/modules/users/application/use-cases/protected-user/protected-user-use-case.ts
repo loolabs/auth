@@ -7,7 +7,7 @@ export type ProtectedUserUseCaseError =
   | AppError.UnexpectedError
 
 export type ProtectedUserSuccess = {
-  val: string
+  email: string
 }
 
 export type ProtectedUserUseCaseResponse = Result<ProtectedUserSuccess, ProtectedUserUseCaseError>
@@ -17,7 +17,7 @@ export class ProtectedUserUseCase
 
   async execute(dto: ProtectedUserDTO): Promise<ProtectedUserUseCaseResponse> {
     const res: ProtectedUserSuccess = {
-      val: dto.val
+      email: dto.user.email.value
     }
     try {
       return Result.ok(res)

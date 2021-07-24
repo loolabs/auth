@@ -11,6 +11,7 @@ describe('Authcode AggregateRoot', () => {
 
     AuthCode.create({
       clientId: 'test_client_id',
+      userId: 'test_user_id',
       authCodeString: new AuthCodeString('test_auth_code')
     })
 

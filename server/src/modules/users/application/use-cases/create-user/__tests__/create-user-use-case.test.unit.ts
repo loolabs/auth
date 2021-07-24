@@ -22,15 +22,18 @@ describe('CreateUserUseCase', () => {
 
   beforeEach(() => {
     createUserDTO = {
-      email: 'john.doe@uwaterloo.ca',
-      password: 'secret23',
+      body: {
+        email: 'john.doe@uwaterloo.ca',
+        password: 'secret23',
+      },
     }
   })
 
   test('When executed with valid DTO, should save the user and return an Ok', async () => {
-    const mockUser = mocks.mockUser(createUserDTO)
-    jest.spyOn(userRepo, 'exists').mockResolvedValue(Result.err(new DBError.UserNotFoundError(createUserDTO.email)))
+    const mockUser = mocks.mockUser(createUserDTO.body)
+    jest.spyOn(userRepo, 'exists').mockResolvedValue(Result.err(new DBError.UserNotFoundError(createUserDTO.body.email)))
     jest.spyOn(userRepo, 'getUserByUserEmail').mockResolvedValue(Result.ok(mockUser))
+    
     const createUserResult = await createUserUseCase.execute(createUserDTO)
 
     expect(userRepo.save).toBeCalled()
@@ -38,8 +41,7 @@ describe('CreateUserUseCase', () => {
   })
 
   test('When executed with invalid email, should return UserValueObjectErrors.InvalidEmail', async () => {
-    createUserDTO.email = 'john.doe@mail.utoronto.ca'
-
+    createUserDTO.body.email = 'john.doe@mail.utoronto.ca'
     const createUserResult = await createUserUseCase.execute(createUserDTO)
 
     expect(createUserResult.isErr()).toBe(true)
@@ -48,8 +50,7 @@ describe('CreateUserUseCase', () => {
   })
 
   test('When executed with invalid password, should return UserValueObjectErrors.InvalidSecretValue', async () => {
-    createUserDTO.password = '2shrt'
-
+    createUserDTO.body.password = '2shrt'
     const createUserResult = await createUserUseCase.execute(createUserDTO)
 
     expect(createUserResult.isErr()).toBe(true)
@@ -59,7 +60,6 @@ describe('CreateUserUseCase', () => {
 
   test('When executed with email that already exists, should return CreateUserErrors.EmailAlreadyExistsError', async () => {
     jest.spyOn(userRepo, 'exists').mockResolvedValue(Result.ok(true))
-
     const createUserResult = await createUserUseCase.execute(createUserDTO)
 
     expect(createUserResult.isErr()).toBe(true)

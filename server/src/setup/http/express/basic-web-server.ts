@@ -1,12 +1,12 @@
-import { RequestContext } from '@mikro-orm/core'
 import express from 'express'
-import { APIRouter, WebServer } from './types'
-import { MikroORM } from '../../database'
+import session from 'express-session'
+import CookieParser from 'cookie-parser'
 import cors from 'cors'
-import { Strategy, StrategyOptions, ExtractJwt } from 'passport-jwt'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
-import { JWT_SECRET } from '../../../shared/core/secret'
+import { RequestContext } from '@mikro-orm/core'
+import { MikroORM } from '../../database'
+import { APIRouter, WebServer } from './types'
 import { Controllers, UseCases } from '../../application/types'
 
 
@@ -16,16 +16,18 @@ interface BasicWebServerOptions {
 
 const setupBasicWebServer = (apiRouter: APIRouter, _controllers: Controllers, useCases: UseCases, options: BasicWebServerOptions): WebServer => {
   const server = express()
-  server.use(express.json())
   server.use(cors())
+  server.use(CookieParser())
+  server.use(express.json())
+  server.use(session({ secret: `${process.env.EXPRESS_SESSION_SECRET}` }));
 
   const entityManager = options?.mikroORM?.em
   if (entityManager !== undefined) {
     server.use((_req, _res, next) => RequestContext.create(entityManager, next))
   }
 
-  server.use('/api', apiRouter)
-
+  server.use(passport.initialize());
+  server.use(passport.session());
   passport.use(new LocalStrategy.Strategy({
       usernameField: 'email',
       passwordField: 'password',
@@ -37,20 +39,22 @@ const setupBasicWebServer = (apiRouter: APIRouter, _controllers: Controllers, us
       }
   ));
 
-  const passportOptions: StrategyOptions = {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
-      secretOrKey: JWT_SECRET
-  }
+  passport.serializeUser(function(user: any, done) {
+    done(null, user._id.value);
+  });
+  
+  passport.deserializeUser(function(userId: string, cb) {
+    useCases.getUser.execute({userId})
+    .then(result => {
+      if(result.isOk()){
+        cb(null, result.value);
+      } else {
+        cb(result.error, null)
+      }
+    })
+  });
 
-  passport.use(
-      new Strategy(passportOptions, 
-      function(token, done) {
-          useCases.getUser.execute({userId: token.userId})
-          .then(result => {
-              return done(null, result);
-          })
-      })
-  );
+  server.use('/api', apiRouter)
 
   server.use((_req, res) => res.status(404).json({ message: 'No route found' }))
 

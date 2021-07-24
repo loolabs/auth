@@ -5,6 +5,7 @@ import { ProtectedUserSuccess, ProtectedUserUseCase } from '../protected-user-us
 import { AppError } from '../../../../../../shared/core/app-error'
 import { ProtectedUserController } from '../protected-user-controller'
 import { mocks } from '../../../../../../test-utils'
+import { CreateUserDTOBody } from '../../create-user/create-user-dto'
 
 // TODO: how to show developer these mocks are necessary when building a controller? aka must be synced with buildController()
 jest.mock('../../../../infra/repos/user-repo/implementations/mikro-user-repo')
@@ -12,19 +13,28 @@ jest.mock('../protected-user-use-case')
 
 describe('ProtectedUserController', () => {
 
-  const protectedUserDTO: ProtectedUserDTO = {
-    val: "message"
-  }
+  let protectedUserDTO: ProtectedUserDTO
+  let userDTO: CreateUserDTOBody
   let protectedUserController: ProtectedUserController
   beforeAll(async () => {
     const protectedUser = await mocks.mockProtectedUser()
     protectedUserController = protectedUser.protectedUserController
   })
+
+  beforeEach(() => {
+    userDTO = {
+      email: 'loolabs@uwaterloo.ca',
+      password: 'password',
+    },
+    protectedUserDTO = {
+      user: mocks.mockUser(userDTO)
+    }
+  })
   
   test('When the ProtectedUserUserCase returns Ok, the ProtectedUserController returns 200 OK', async () => {
     const mockResponse = httpMocks.createResponse()
     const useCaseResolvedValue: ProtectedUserSuccess = {
-      val: "input"
+      email: userDTO.email
     }
     jest.spyOn(ProtectedUserUseCase.prototype, 'execute').mockResolvedValue(Result.ok(useCaseResolvedValue))
 

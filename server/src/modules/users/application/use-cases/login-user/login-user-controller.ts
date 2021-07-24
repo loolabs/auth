@@ -15,8 +15,12 @@ export class LoginUserController extends ControllerWithDTO<LoginUserUseCase> {
 
   buildDTO(req: express.Request, res: express.Response): Result<LoginUserDTO, Array<ValidationError>> {
     const errs: Array<ValidationError> = []
+    let params: any = req.params
+    if(Object.keys(req.params).length === 0){
+      params = undefined
+    }
     const compiledValidationBody = {
-      req, res
+      req, res, body: req.body, params 
     }
     const bodyResult = this.validate(compiledValidationBody, loginUserDTOSchema)
     if (bodyResult.isOk()) {
@@ -33,7 +37,11 @@ export class LoginUserController extends ControllerWithDTO<LoginUserUseCase> {
       const result = await this.useCase.execute(dto)
 
       if (result.isOk()) {
-        return this.ok(res, result.value)
+        if('user' in result.value){
+          return this.ok(res, result.value)
+        } else {
+          return this.redirect(res, result.value.redirectUrl, result.value.redirectParams)
+        }
       } else {
         const error = result.error
 

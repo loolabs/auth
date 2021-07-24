@@ -1,8 +1,13 @@
 export namespace CreateUserErrors {
-  export class EmailAlreadyExistsError {
-    public message: string
+  export class EmailAlreadyExistsError extends Error {
     public constructor(email: string) {
-      this.message = `An account with the email ${email} already exists`
+      super(`An account with the email ${email} already exists`)
+    }
+  }
+
+  export class InvalidOpenIDParamsError extends Error {
+    public constructor() {
+      super(`Invalid OpenID parameters were provided.`)
     }
   }
 }
