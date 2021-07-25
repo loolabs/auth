@@ -18,6 +18,7 @@ services:
       - .env
     depends_on:
       - db
+      - redis
   db:
     container_name: postgres
     image: postgres:13.1
@@ -30,6 +31,14 @@ services:
       - data:/var/lib/postgresql/data
     ports:
       - ${DB_PORT}:${DB_PORT}
+  redis:
+    container_name: cache
+    image: redis
+    command: redis-server --requirepass ${CACHE_PASSWORD}
+    ports:
+      - ${CACHE_PORT}:${CACHE_PORT}
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
 
 volumes: #isolate DB data from potentially different OS
   data:
