@@ -1,15 +1,15 @@
-import { WaterparkExpress } from './types'
+import { AuthExpress } from './types'
 import { setupVersionedAPIRouter } from './versioned-api-router'
 import { BasicWebServerOptions, setupBasicWebServer } from './basic-web-server'
 import { Controllers, UseCases } from '../../application'
 
-interface WaterparkExpressOptions extends BasicWebServerOptions {}
+interface AuthExpressOptions extends BasicWebServerOptions {}
 
-const setupWaterparkExpress = (
+const setupAuthExpress = (
   controllers: Controllers,
   useCases: UseCases,
-  options: WaterparkExpressOptions
-): WaterparkExpress => {
+  options: AuthExpressOptions
+): AuthExpress => {
   const apiRouter = setupVersionedAPIRouter(controllers)
   const webServer = setupBasicWebServer(apiRouter, controllers, useCases, options)
 
@@ -19,4 +19,4 @@ const setupWaterparkExpress = (
   }
 }
 
-export { WaterparkExpressOptions, setupWaterparkExpress }
+export { AuthExpressOptions as AuthExpressOptions, setupAuthExpress as setupAuthExpress }

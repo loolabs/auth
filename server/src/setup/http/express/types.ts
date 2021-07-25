@@ -4,7 +4,7 @@ export interface APIRouter extends express.Router {}
 
 export interface WebServer extends express.Express {}
 
-export interface WaterparkExpress {
+export interface AuthExpress {
   apiRouter: APIRouter
   webServer: WebServer
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@loolabs/waterpark-client",
-  "description": "Next.js frontend for Loo Labs' centralized clubs and events platform",
+  "name": "@loolabs/auth-client",
+  "description": "Next.js frontend for Loo Labs' central auth microservice",
   "author": "Loo Labs",
   "version": "0.0.1",
   "license": "ISC",
