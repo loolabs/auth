@@ -1,6 +1,4 @@
-import { UniqueEntityID } from '../../../shared/domain/unique-entity-id'
-import { AuthCodeEntity } from '../../../shared/infra/db/entities/auth-code.entity'
-
+import { AuthCodeEntity } from '../../../shared/infra/cache/entities/auth-code-entity'
 import { AuthCode } from '../domain/entities/auth-code'
 import { AuthCodeString } from '../domain/value-objects/auth-code'
 
@@ -13,8 +11,7 @@ export class AuthCodeMap {
         clientId: authCodeEntity.clientId,
         userId: authCodeEntity.clientId,
         authCodeString: new AuthCodeString(authCodeEntity.authCodeString)
-      },
-      new UniqueEntityID(authCodeEntity.id)
+      }
     )
     if (authCode.isErr()) throw new Error() // TODO: check if we should handle error differently
       

@@ -1,4 +1,4 @@
-import { db, app, http } from '../../setup'
+import { db, app, http, cache } from '../../setup'
 import { TestEnvironment } from './environment'
 
 export interface MikroEnvironmentVariables {
@@ -7,6 +7,7 @@ export interface MikroEnvironmentVariables {
 
 export class MikroTestEnvironment extends TestEnvironment<MikroEnvironmentVariables> {
   protected mikroDB!: db.MikroDB
+  protected cacheDB!: cache.RedisCache
   protected application!: app.Application
   protected waterparkExpress!: http.WaterparkExpress
 
@@ -15,12 +16,12 @@ export class MikroTestEnvironment extends TestEnvironment<MikroEnvironmentVariab
     // to access postgres container on Docker
     // TODO: fix integration testing
     this.mikroDB = await db.setupMikroDB({ debug: false })
-    const { orm, repos } = this.mikroDB
+    this.cacheDB = await cache.setupRedisCache()
 
-    this.application = app.setupApplication(repos)
+    this.application = app.setupApplication({db: this.mikroDB, cache: this.cacheDB})
     const { controllers, useCases } = this.application
 
-    this.waterparkExpress = http.setupWaterparkExpress(controllers, useCases, { mikroORM: orm })
+    this.waterparkExpress = http.setupWaterparkExpress(controllers, useCases, { mikroORM: this.mikroDB.orm })
     const { webServer } = this.waterparkExpress
 
     return { webServer }

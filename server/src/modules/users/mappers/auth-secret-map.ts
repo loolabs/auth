@@ -17,7 +17,8 @@ export class AuthSecretMap {
     const authCodeResult = AuthSecret.create(
       {
         clientId: authSecretEntity.clientId,
-        encryptedClientSecret: encryptedClientSecret.value
+        encryptedClientSecret: encryptedClientSecret.value,
+        isVerified: authSecretEntity.isVerified
       },
       new UniqueEntityID(authSecretEntity.id)
     )
@@ -25,5 +26,14 @@ export class AuthSecretMap {
     if (authCodeResult.isErr()) throw new Error() // TODO: check if we should handle error differently
 
     return authCodeResult.value
+  }
+
+  public static async toPersistence(authSecret: AuthSecret): Promise<AuthSecretEntity> {
+    const authSecretEntity = new AuthSecretEntity()
+    authSecretEntity.clientId = authSecret.clientId
+    authSecretEntity.encryptedClientSecret = authSecret.encryptedClientSecret.value
+    authSecretEntity.isVerified = authSecret.isVerified
+
+    return authSecretEntity
   }
 }

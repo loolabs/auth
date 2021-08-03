@@ -6,7 +6,7 @@ import { AuthCodeString } from '../../modules/users/domain/value-objects/auth-co
 import { UserDTO } from '../../modules/users/mappers/user-dto'
 
 export type AuthToken = string
-//if we choose to adopt other authentication certificate types (like csrf-tokens), this can change
+//if we choose to adopt other authentication certificate types (like jwt-tokens), this can change
 export type AuthCertificate = AuthCodeString
 
 //establish success, error, and combined response types for all authentication methods

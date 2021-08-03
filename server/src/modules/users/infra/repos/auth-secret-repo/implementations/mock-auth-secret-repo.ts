@@ -14,6 +14,13 @@ export class MockAuthSecretRepo implements AuthSecretRepo {
     ))
   }
 
+  async exists(clientId: string): Promise<Result<boolean, DBErrors>> {
+    for (const authSecretEntity of this.authSecretEntities.values()) {
+      if (authSecretEntity.clientId === clientId) return Result.ok(true)
+    }
+    return Result.err(new DBError.AuthSecretNotFoundError(clientId))
+  }
+
   async getAuthSecretByClientId(clientId: string): Promise<Result<AuthSecret, DBErrors>> {
     const authSecretEntity = this.authSecretEntities.get(clientId)
 
@@ -22,4 +29,13 @@ export class MockAuthSecretRepo implements AuthSecretRepo {
     }
     return Result.ok(AuthSecretMap.toDomain(authSecretEntity))
   }
+
+  async save(authSecret: AuthSecret): Promise<void> {
+    const exists = await this.exists(authSecret.clientId)
+    if (exists) return
+
+    const authSecretEntity = await AuthSecretMap.toPersistence(authSecret)
+    this.authSecretEntities.set(authSecretEntity.clientId, authSecretEntity)
+  }
+
 }
