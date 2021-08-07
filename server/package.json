@@ -1,6 +1,6 @@
 {
-  "name": "@loolabs/waterpark-server",
-  "description": "REST API server for Loo Labs' centralized clubs and events platform",
+  "name": "@loolabs/auth-server",
+  "description": "REST API Auth server, servicing Loo Labs' apps using the OIDC auth code flow",
   "author": "Loo Labs",
   "version": "0.0.1",
   "license": "ISC",
