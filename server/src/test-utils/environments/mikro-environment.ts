@@ -9,7 +9,7 @@ export class MikroTestEnvironment extends TestEnvironment<MikroEnvironmentVariab
   protected mikroDB!: db.MikroDB
   protected cacheDB!: cache.RedisCache
   protected application!: app.Application
-  protected waterparkExpress!: http.WaterparkExpress
+  protected authExpress!: http.AuthExpress
 
   public async setup(): Promise<MikroEnvironmentVariables> {
     // must set environment variable DATABASE_URL to postgresql://loolabs:loolabs@localhost/clubs
@@ -21,8 +21,8 @@ export class MikroTestEnvironment extends TestEnvironment<MikroEnvironmentVariab
     this.application = app.setupApplication({db: this.mikroDB, cache: this.cacheDB})
     const { controllers, useCases } = this.application
 
-    this.waterparkExpress = http.setupWaterparkExpress(controllers, useCases, { mikroORM: this.mikroDB.orm })
-    const { webServer } = this.waterparkExpress
+    this.authExpress = http.setupAuthExpress(controllers, useCases, { mikroORM: this.mikroDB.orm })
+    const { webServer } = this.authExpress
 
     return { webServer }
   }

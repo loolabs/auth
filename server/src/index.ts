@@ -17,9 +17,9 @@ const auth = async (options: AuthOptions) => {
 
   const { useCases, controllers } = app.setupApplication({db: dbRepo, cache: cacheRepo})
 
-  const { webServer } = http.setupWaterparkExpress(controllers, useCases, { mikroORM: dbRepo.orm })
+  const { webServer } = http.setupAuthExpress(controllers, useCases, { mikroORM: dbRepo.orm })
   webServer.listen(options.port, () => {
-    console.log(`WATERPARK AUTH server running on http://localhost:${port}/api/v1 🦆`)
+    console.log(`LOOLABS AUTH server running on http://localhost:${port}/api/v1 🦆`)
   })
 }
 
