@@ -22,7 +22,7 @@ export class RedisRepository<RedisEntityType> {
 
     async getEntity(entityKey: string): Promise<RedisGetEntityResponse<RedisEntityType>>{
         return new Promise((resolve) => {
-            RedisClient.get(entityKey, (err, value) => {
+            RedisClient().get(entityKey, (err, value) => {
                 if(err || value === null){
                     resolve(Result.err(new AppError.UnexpectedError("Redis get operation failed.")))
                 } else {
@@ -42,16 +42,16 @@ export class RedisRepository<RedisEntityType> {
                 }
             }
             if(options){
-                RedisClient.set(redisEntity.getEntityKey(), JSON.stringify(redisEntity), options.mode, options.value, callback)
+                RedisClient().set(redisEntity.getEntityKey(), JSON.stringify(redisEntity), options.mode, options.value, callback)
             } else {
-                RedisClient.set(redisEntity.getEntityKey(), JSON.stringify(redisEntity),  callback)
+                RedisClient().set(redisEntity.getEntityKey(), JSON.stringify(redisEntity),  callback)
             } 
         })
     }
 
     async removeEntity(redisEntity: RedisEntity): Promise<RedisDeleteEntityResponse>{
         return new Promise((resolve) => {
-            RedisClient.del(redisEntity.getEntityKey(), (err) => {
+            RedisClient().del(redisEntity.getEntityKey(), (err) => {
                 if(err){
                     resolve(Result.err(new AppError.UnexpectedError("Redis delete operation failed.")))
                 } else {
