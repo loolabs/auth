@@ -5,7 +5,7 @@ import { PassportUserAuthHandler } from '../../shared/auth/implementations/passp
 import { GetUserUseCase } from '../../modules/users/application/use-cases/get-user/get-user-use-case'
 import { AuthenticateUserUseCase } from '../../modules/users/application/use-cases/authenticate-user/authenticate-user-use-case'
 import { ProtectedUserUseCase } from '../../modules/users/application/use-cases/protected-user/protected-user-use-case'
-import { Persistence } from '../..'
+import { Persistence } from '../persistence/persistence'
 
 export const setupUseCases = ({ db }: Persistence): UseCases => {
   return {

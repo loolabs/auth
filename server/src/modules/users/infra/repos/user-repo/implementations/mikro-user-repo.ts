@@ -14,9 +14,9 @@ export class MikroUserRepo implements UserRepo {
   async exists(userEmail: UserEmail): Promise<Result<boolean, DBErrors>> {
     const user = await this.usersEntityRepo.findOne({ email: userEmail.value })
     if (user !== null) {
-      return Result.ok(user !== null)
+      return Result.ok(true)
     } else {
-      return Result.err(new DBError.UserNotFoundError(userEmail.value))
+      return Result.ok(false)
     }
   }
 

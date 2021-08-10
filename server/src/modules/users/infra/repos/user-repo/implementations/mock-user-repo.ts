@@ -18,7 +18,7 @@ export class MockUserRepo implements UserRepo {
     for (const userEntity of this.userEntities.values()) {
       if (userEntity.email === userEmail.value) return Result.ok(true)
     }
-    return Result.err(new DBError.UserNotFoundError(userEmail.value))
+    return Result.ok(false)
   }
 
   async getUserByUserId(userId: string): Promise<Result<User, DBErrors>> {
@@ -29,7 +29,7 @@ export class MockUserRepo implements UserRepo {
 
   async save(user: User): Promise<void> {
     const exists = await this.exists(user.email)
-    if (exists) return
+    if (exists.isOk() && exists.value) return
 
     const userEntity = await UserMap.toPersistence(user)
     this.userEntities.set(userEntity.id, userEntity)

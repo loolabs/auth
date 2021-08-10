@@ -18,7 +18,7 @@ export class MockAuthSecretRepo implements AuthSecretRepo {
     for (const authSecretEntity of this.authSecretEntities.values()) {
       if (authSecretEntity.clientId === clientId) return Result.ok(true)
     }
-    return Result.err(new DBError.AuthSecretNotFoundError(clientId))
+    return Result.ok(false)
   }
 
   async getAuthSecretByClientId(clientId: string): Promise<Result<AuthSecret, DBErrors>> {
@@ -32,7 +32,7 @@ export class MockAuthSecretRepo implements AuthSecretRepo {
 
   async save(authSecret: AuthSecret): Promise<void> {
     const exists = await this.exists(authSecret.clientId)
-    if (exists) return
+    if (exists.isOk() && exists.value) return
 
     const authSecretEntity = await AuthSecretMap.toPersistence(authSecret)
     this.authSecretEntities.set(authSecretEntity.clientId, authSecretEntity)

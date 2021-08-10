@@ -14,9 +14,9 @@ export class MikroAuthSecretRepo implements AuthSecretRepo {
       clientId: clientId,
     })
     if (authSecretEntity !== null) {
-      return Result.ok(authSecretEntity !== null)
+      return Result.ok(true)
     } else {
-      return Result.err(new DBError.AuthSecretNotFoundError(clientId))
+      return Result.ok(false)
     }
   }
 

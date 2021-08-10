@@ -17,14 +17,14 @@ const setupMockRepos = (entities: MockEntities): MockRepos => {
   }
 }
 
-interface MockDB extends Cache {
+interface MockCache extends Cache {
   repos: MockRepos
 }
 
-const setupMockDB = (entities: MockEntities): MockDB => {
+const setupMockDB = (entities: MockEntities): MockCache => {
   return {
     repos: setupMockRepos(entities),
   }
 }
 
-export { MockEntities, MockRepos, MockDB, setupMockDB }
+export { MockEntities, MockRepos, MockCache, setupMockDB }

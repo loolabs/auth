@@ -4,14 +4,14 @@ import { Result } from '../../core/result'
 import { RedisEntity } from './redis-entity'
 
 export type RedisSaveEntityResponse = Result<RedisSaveEntitySuccess, RedisSaveEntityError>
-export type RedisSaveEntitySuccess = boolean
+export type RedisSaveEntitySuccess = true
 export type RedisSaveEntityError = AppError.UnexpectedError
 
 export type RedisGetEntityResponse<RedisEntityType> = Result<RedisEntityType, RedisGetEntityError>
 export type RedisGetEntityError = AppError.UnexpectedError
 
 export type RedisDeleteEntityResponse = Result<RedisDeleteEntitySuccess, RedisDeleteEntityError>
-export type RedisDeleteEntitySuccess = boolean
+export type RedisDeleteEntitySuccess = true
 export type RedisDeleteEntityError = AppError.UnexpectedError
 export interface RedisSetOptions {
   mode: string
@@ -23,7 +23,7 @@ export class RedisRepository<RedisEntityType> {
     return new Promise((resolve) => {
       RedisClient().get(entityKey, (err, value) => {
         if (err || value === null) {
-          resolve(Result.err(new AppError.UnexpectedError('Redis get operation failed.')))
+          resolve(Result.err(new AppError.UnexpectedError(`Redis get operation failed. ${err}`)))
         } else {
           resolve(Result.ok(JSON.parse(value) as RedisEntityType))
         }
@@ -38,7 +38,7 @@ export class RedisRepository<RedisEntityType> {
     return new Promise((resolve) => {
       const callback = (err: Error | null) => {
         if (err) {
-          resolve(Result.err(new AppError.UnexpectedError('Redis save operation failed.')))
+          resolve(Result.err(new AppError.UnexpectedError(`Redis save operation failed. ${err}`)))
         } else {
           resolve(Result.ok(true))
         }
@@ -61,7 +61,7 @@ export class RedisRepository<RedisEntityType> {
     return new Promise((resolve) => {
       RedisClient().del(redisEntity.getEntityKey(), (err) => {
         if (err) {
-          resolve(Result.err(new AppError.UnexpectedError('Redis delete operation failed.')))
+          resolve(Result.err(new AppError.UnexpectedError(`Redis delete operation failed. ${err}`)))
         } else {
           resolve(Result.ok(true))
         }
