@@ -7,12 +7,12 @@ import { AuthenticateUserUseCase } from '../../modules/users/application/use-cas
 import { ProtectedUserUseCase } from '../../modules/users/application/use-cases/protected-user/protected-user-use-case'
 import { Persistence } from '../..'
 
-export const setupUseCases = ({db}: Persistence): UseCases => {
+export const setupUseCases = ({ db }: Persistence): UseCases => {
   return {
     createUser: new CreateUserUseCase(new PassportUserAuthHandler(), db.repos.user),
     loginUser: new LoginUserUseCase(new PassportUserAuthHandler()),
     getUser: new GetUserUseCase(db.repos.user),
     authUser: new AuthenticateUserUseCase(db.repos.user),
-    protectedUser: new ProtectedUserUseCase()
+    protectedUser: new ProtectedUserUseCase(),
   }
 }

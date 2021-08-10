@@ -17,7 +17,7 @@ export interface UseCases {
 
 export interface Controllers {
   createUser: CreateUserController
-  loginUser: LoginUserController,
+  loginUser: LoginUserController
   protectedUser: ProtectedUserController
 }
 

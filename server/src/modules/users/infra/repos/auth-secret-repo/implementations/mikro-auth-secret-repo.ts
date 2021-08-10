@@ -10,10 +10,10 @@ export class MikroAuthSecretRepo implements AuthSecretRepo {
   constructor(protected authSecretEntityRepo: EntityRepository<AuthSecretEntity>) {}
 
   async exists(clientId: string): Promise<Result<boolean, DBErrors>> {
-    const authSecretEntity = await this.authSecretEntityRepo.findOne({ 
-      clientId: clientId, 
+    const authSecretEntity = await this.authSecretEntityRepo.findOne({
+      clientId: clientId,
     })
-    if(authSecretEntity !== null){
+    if (authSecretEntity !== null) {
       return Result.ok(authSecretEntity !== null)
     } else {
       return Result.err(new DBError.AuthSecretNotFoundError(clientId))

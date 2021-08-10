@@ -89,18 +89,18 @@ interface MikroEntityRepos {
 const setupMikroEntityRepos = ({ em: entityManager }: MikroORM): MikroEntityRepos => {
   return {
     user: entityManager.getRepository(UserEntity),
-    authSecret: entityManager.getRepository(AuthSecretEntity)
+    authSecret: entityManager.getRepository(AuthSecretEntity),
   }
 }
 
 interface MikroRepos extends Repos {
-  user: MikroUserRepo,
+  user: MikroUserRepo
   authSecret: MikroAuthSecretRepo
 }
 const setupMikroRepos = (mikroEntityRepos: MikroEntityRepos): MikroRepos => {
   return {
     user: new MikroUserRepo(mikroEntityRepos.user),
-    authSecret: new MikroAuthSecretRepo(mikroEntityRepos.authSecret)
+    authSecret: new MikroAuthSecretRepo(mikroEntityRepos.authSecret),
   }
 }
 
@@ -122,4 +122,4 @@ const setupMikroDB = async (options: Options = {}): Promise<MikroDB> => {
 }
 
 export { MikroORM, MikroEntityRepos, MikroRepos, MikroDB, setupMikroDB }
-export default baseOptions; // migrations CLI requires that these options be the default export
+export default baseOptions // migrations CLI requires that these options be the default export

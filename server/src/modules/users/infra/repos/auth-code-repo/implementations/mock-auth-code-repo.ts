@@ -10,15 +10,17 @@ export class MockAuthCodeRepo implements AuthCodeRepo {
   protected authCodeEntities: Map<string, AuthCodeEntity>
 
   constructor(authCodeEntities: Array<AuthCodeEntity> = []) {
-    this.authCodeEntities = new Map(authCodeEntities.map((authCodeEntity) => 
-      [authCodeEntity.clientId, authCodeEntity]
-    ))
+    this.authCodeEntities = new Map(
+      authCodeEntities.map((authCodeEntity) => [authCodeEntity.clientId, authCodeEntity])
+    )
   }
 
-  async getAuthCodeFromAuthCodeString(authCodeString: AuthCodeString): Promise<Result<AuthCode, DBErrors>> {
+  async getAuthCodeFromAuthCodeString(
+    authCodeString: AuthCodeString
+  ): Promise<Result<AuthCode, DBErrors>> {
     const authCodeEntity = this.authCodeEntities.get(authCodeString.getValue())
 
-    if(authCodeEntity === undefined){
+    if (authCodeEntity === undefined) {
       return Result.err(new DBError.AuthCodeNotFoundError(authCodeString.getValue()))
     }
     return Result.ok(AuthCodeMap.toDomain(authCodeEntity))

@@ -4,21 +4,19 @@ import { AuthSecret } from '../domain/entities/auth-secret'
 import { EncryptedClientSecret } from '../domain/value-objects/encrypted-client-secret'
 
 export class AuthSecretMap {
-
   public static toDomain(authSecretEntity: AuthSecretEntity): AuthSecret {
-
     const encryptedClientSecret = EncryptedClientSecret.create({
       value: authSecretEntity.encryptedClientSecret,
       hashed: true,
     })
 
-    if(encryptedClientSecret.isErr()) throw new Error() // TODO: check if we should handle error differently
+    if (encryptedClientSecret.isErr()) throw new Error() // TODO: check if we should handle error differently
 
     const authCodeResult = AuthSecret.create(
       {
         clientId: authSecretEntity.clientId,
         encryptedClientSecret: encryptedClientSecret.value,
-        isVerified: authSecretEntity.isVerified
+        isVerified: authSecretEntity.isVerified,
       },
       new UniqueEntityID(authSecretEntity.id)
     )

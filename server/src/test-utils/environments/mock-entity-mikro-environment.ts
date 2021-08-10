@@ -2,7 +2,6 @@
 import { MikroEnvironmentVariables, MikroTestEnvironment } from './mikro-environment'
 
 export class MockEntityMikroTestEnvironment extends MikroTestEnvironment {
-
   constructor(_ids: Array<any>) {
     super()
   }

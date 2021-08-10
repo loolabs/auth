@@ -1,4 +1,4 @@
-import { RedisEntity } from "../redis-entity"
+import { RedisEntity } from '../redis-entity'
 
 export class AuthCodeEntity extends RedisEntity {
   clientId!: string
@@ -7,7 +7,7 @@ export class AuthCodeEntity extends RedisEntity {
 
   authCodeString!: string
 
-  getEntityKey(){
+  getEntityKey() {
     return `${this.constructor.name}/${this.authCodeString}`
   }
 
@@ -17,7 +17,7 @@ export class AuthCodeEntity extends RedisEntity {
       clientId,
       userId,
       authCodeString,
-      id
+      id,
     }
   }
 }

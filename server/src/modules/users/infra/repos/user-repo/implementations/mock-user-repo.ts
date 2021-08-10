@@ -42,10 +42,13 @@ export class MockUserRepo implements UserRepo {
     return Result.err(new DBError.UserNotFoundError(userEmail.value))
   }
 
-  async getUserByUserEmailandUserPassword(userEmail: UserEmail, userPassword: UserPassword): Promise<Result<User, DBErrors>> {
+  async getUserByUserEmailandUserPassword(
+    userEmail: UserEmail,
+    userPassword: UserPassword
+  ): Promise<Result<User, DBErrors>> {
     for (const userEntity of this.userEntities.values()) {
-      if (userEntity.email === userEmail.value && userEntity.password == userPassword.value) 
-      return Result.ok(UserMap.toDomain(userEntity))
+      if (userEntity.email === userEmail.value && userEntity.password == userPassword.value)
+        return Result.ok(UserMap.toDomain(userEntity))
     }
     return Result.err(new DBError.UserNotFoundError(userEmail.value))
   }

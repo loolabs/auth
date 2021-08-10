@@ -9,9 +9,9 @@ export class MockAuthSecretRepo implements AuthSecretRepo {
   protected authSecretEntities: Map<string, AuthSecretEntity>
 
   constructor(authSecretEntities: Array<AuthSecretEntity> = []) {
-    this.authSecretEntities = new Map(authSecretEntities.map((authSecretEntity) => 
-      [authSecretEntity.clientId, authSecretEntity]
-    ))
+    this.authSecretEntities = new Map(
+      authSecretEntities.map((authSecretEntity) => [authSecretEntity.clientId, authSecretEntity])
+    )
   }
 
   async exists(clientId: string): Promise<Result<boolean, DBErrors>> {
@@ -24,7 +24,7 @@ export class MockAuthSecretRepo implements AuthSecretRepo {
   async getAuthSecretByClientId(clientId: string): Promise<Result<AuthSecret, DBErrors>> {
     const authSecretEntity = this.authSecretEntities.get(clientId)
 
-    if(authSecretEntity === undefined){
+    if (authSecretEntity === undefined) {
       return Result.err(new DBError.AuthSecretNotFoundError(clientId))
     }
     return Result.ok(AuthSecretMap.toDomain(authSecretEntity))
@@ -37,5 +37,4 @@ export class MockAuthSecretRepo implements AuthSecretRepo {
     const authSecretEntity = await AuthSecretMap.toPersistence(authSecret)
     this.authSecretEntities.set(authSecretEntity.clientId, authSecretEntity)
   }
-
 }

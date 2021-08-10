@@ -16,22 +16,30 @@ export type UserAuthHandlerLoginSuccess = {
   cert?: AuthCertificate
   user: UserDTO
 }
-export type UserAuthHandlerLoginError = LoginUserErrors.IncorrectPasswordError | AppError.UnexpectedError
-export type UserAuthHandlerLoginResponse = Result<UserAuthHandlerLoginSuccess, UserAuthHandlerLoginError> 
+export type UserAuthHandlerLoginError =
+  | LoginUserErrors.IncorrectPasswordError
+  | AppError.UnexpectedError
+export type UserAuthHandlerLoginResponse = Result<
+  UserAuthHandlerLoginSuccess,
+  UserAuthHandlerLoginError
+>
 
 export interface UserAuthHandlerLoginOptions {
-  req: express.Request, // we make the assumption that all auth handlers will require these
-  res: express.Response,
+  req: express.Request // we make the assumption that all auth handlers will require these
+  res: express.Response
   [key: string]: any //additional, implementation-specific options for auth handlers
 }
 
 //creation
 export type UserAuthHandlerCreateSuccess = AuthCertificate
 export type UserAuthHandlerCreateError = AppError.UnexpectedError
-export type UserAuthHandlerCreateResponse = Result<UserAuthHandlerCreateSuccess, UserAuthHandlerCreateError> 
+export type UserAuthHandlerCreateResponse = Result<
+  UserAuthHandlerCreateSuccess,
+  UserAuthHandlerCreateError
+>
 
 export interface UserAuthHandlerCreateOptions {
-  userId: string, // we make the assumption that all auth handlers will require this at the least
+  userId: string // we make the assumption that all auth handlers will require this at the least
   [key: string]: any //additional, implementation-specific options for auth handlers
 }
 

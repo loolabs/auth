@@ -18,7 +18,7 @@ export class MikroTestEnvironment extends TestEnvironment<MikroEnvironmentVariab
     this.mikroDB = await db.setupMikroDB({ debug: false })
     this.cacheDB = await cache.setupRedisCache()
 
-    this.application = app.setupApplication({db: this.mikroDB, cache: this.cacheDB})
+    this.application = app.setupApplication({ db: this.mikroDB, cache: this.cacheDB })
     const { controllers, useCases } = this.application
 
     this.authExpress = http.setupAuthExpress(controllers, useCases, { mikroORM: this.mikroDB.orm })

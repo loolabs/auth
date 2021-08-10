@@ -1,7 +1,7 @@
-import { RedisAuthCodeRepo } from "../../modules/users/infra/repos/auth-code-repo/implementations/redis-auth-code-repo"
-import { AuthCodeEntity } from "../../shared/infra/cache/entities/auth-code-entity"
-import { RedisRepository } from "../../shared/infra/cache/redis-repository"
-import { Cache, Repos } from "./types"
+import { RedisAuthCodeRepo } from '../../modules/users/infra/repos/auth-code-repo/implementations/redis-auth-code-repo'
+import { AuthCodeEntity } from '../../shared/infra/cache/entities/auth-code-entity'
+import { RedisRepository } from '../../shared/infra/cache/redis-repository'
+import { Cache, Repos } from './types'
 
 interface RedisEntityRepos {
   authCode: RedisRepository<AuthCodeEntity>
@@ -9,7 +9,7 @@ interface RedisEntityRepos {
 
 const setupRedisEntityRepos = (): RedisEntityRepos => {
   return {
-    authCode: new RedisRepository<AuthCodeEntity>()
+    authCode: new RedisRepository<AuthCodeEntity>(),
   }
 }
 
@@ -19,7 +19,7 @@ interface RedisRepos extends Repos {
 
 const setupRedisRepos = (redisEntityRepos: RedisEntityRepos): RedisRepos => {
   return {
-    authCode: new RedisAuthCodeRepo(redisEntityRepos.authCode)
+    authCode: new RedisAuthCodeRepo(redisEntityRepos.authCode),
   }
 }
 
@@ -31,11 +31,11 @@ interface RedisCache extends Cache {
 const setupRedisCache = async (): Promise<RedisCache> => {
   const entityRepos = setupRedisEntityRepos()
   const repos = setupRedisRepos(entityRepos)
-  
+
   return {
     entityRepos,
-    repos
+    repos,
   }
 }
-  
+
 export { RedisEntityRepos, RedisRepos, RedisCache, setupRedisCache }

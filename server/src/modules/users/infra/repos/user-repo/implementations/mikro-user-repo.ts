@@ -13,7 +13,7 @@ export class MikroUserRepo implements UserRepo {
 
   async exists(userEmail: UserEmail): Promise<Result<boolean, DBErrors>> {
     const user = await this.usersEntityRepo.findOne({ email: userEmail.value })
-    if(user !== null){
+    if (user !== null) {
       return Result.ok(user !== null)
     } else {
       return Result.err(new DBError.UserNotFoundError(userEmail.value))
@@ -32,19 +32,21 @@ export class MikroUserRepo implements UserRepo {
     return Result.ok(UserMap.toDomain(user))
   }
 
-  async getUserByUserEmailandUserPassword(userEmail: UserEmail, userPassword: UserPassword): Promise<Result<User, DBErrors>> {
+  async getUserByUserEmailandUserPassword(
+    userEmail: UserEmail,
+    userPassword: UserPassword
+  ): Promise<Result<User, DBErrors>> {
     const user = await this.usersEntityRepo.findOne({ email: userEmail.value })
     if (user === null) return Result.err(new DBError.UserNotFoundError(userEmail.value))
-        
+
     const passwordsEqual = await userPassword.compareSecret(user.password)
-    if(passwordsEqual.isOk() && !passwordsEqual.value){
+    if (passwordsEqual.isOk() && !passwordsEqual.value) {
       return Result.err(new DBError.PasswordsNotEqualError(userEmail.value))
     }
     return Result.ok(UserMap.toDomain(user))
   }
 
   async save(user: User): Promise<void> {
-   
     const exists = await this.exists(user.email)
 
     if (exists.isOk() && exists.value) return

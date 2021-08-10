@@ -4,7 +4,9 @@ import { AuthCode } from '../../../domain/entities/auth-code'
 import { AuthCodeString } from '../../../domain/value-objects/auth-code'
 
 export abstract class AuthCodeRepo {
-  abstract getAuthCodeFromAuthCodeString(authCodeString: AuthCodeString): Promise<Result<AuthCode, DBErrors>>
+  abstract getAuthCodeFromAuthCodeString(
+    authCodeString: AuthCodeString
+  ): Promise<Result<AuthCode, DBErrors>>
   abstract save(authCode: AuthCode): Promise<void>
   abstract delete(authCode: AuthCode): Promise<void>
 }
