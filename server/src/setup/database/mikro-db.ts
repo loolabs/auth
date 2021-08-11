@@ -9,13 +9,11 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql'
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter'
 import path from 'path'
-import { Repos, DB } from './types'
 import { UserEntity } from '../../shared/infra/db/entities/user.entity'
-import { AuthCodeEntity } from '../../shared/infra/db/entities/auth-code.entity'
 import { AuthSecretEntity } from '../../shared/infra/db/entities/auth-secret.entity'
 import { MikroUserRepo } from '../../modules/users/infra/repos/user-repo/implementations/mikro-user-repo'
-import { MikroAuthCodeRepo } from '../../modules/users/infra/repos/auth-code-repo/implementations/mikro-auth-code-repo'
 import { MikroAuthSecretRepo } from '../../modules/users/infra/repos/auth-secret-repo/implementations/mikro-auth-secret-repo'
+import { DB, Repos } from './types'
 
 class CustomNamingStrategy extends AbstractNamingStrategy implements NamingStrategy {
   classToTableName(entityName: string) {
@@ -86,27 +84,23 @@ const setupMikroORM = async (options: Options = {}): Promise<MikroORM> => {
 
 interface MikroEntityRepos {
   user: EntityRepository<UserEntity>
-  authCode: EntityRepository<AuthCodeEntity>
   authSecret: EntityRepository<AuthSecretEntity>
 }
 const setupMikroEntityRepos = ({ em: entityManager }: MikroORM): MikroEntityRepos => {
   return {
     user: entityManager.getRepository(UserEntity),
-    authCode: entityManager.getRepository(AuthCodeEntity),
-    authSecret: entityManager.getRepository(AuthSecretEntity)
+    authSecret: entityManager.getRepository(AuthSecretEntity),
   }
 }
 
 interface MikroRepos extends Repos {
-  user: MikroUserRepo,
-  authCode: MikroAuthCodeRepo,
+  user: MikroUserRepo
   authSecret: MikroAuthSecretRepo
 }
 const setupMikroRepos = (mikroEntityRepos: MikroEntityRepos): MikroRepos => {
   return {
     user: new MikroUserRepo(mikroEntityRepos.user),
-    authCode: new MikroAuthCodeRepo(mikroEntityRepos.authCode),
-    authSecret: new MikroAuthSecretRepo(mikroEntityRepos.authSecret)
+    authSecret: new MikroAuthSecretRepo(mikroEntityRepos.authSecret),
   }
 }
 
@@ -128,4 +122,4 @@ const setupMikroDB = async (options: Options = {}): Promise<MikroDB> => {
 }
 
 export { MikroORM, MikroEntityRepos, MikroRepos, MikroDB, setupMikroDB }
-export default baseOptions; // migrations CLI requires that these options be the default export
+export default baseOptions // migrations CLI requires that these options be the default export

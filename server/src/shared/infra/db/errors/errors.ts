@@ -8,7 +8,7 @@ export namespace DBError {
   export class AuthSecretNotFoundError {
     public message: string
     public constructor(identifier: string) {
-      this.message = `The client with attribute id ${identifier} could not be found.`
+      this.message = `The auth secret with clientId ${identifier} could not be found.`
     }
   }
   export class AuthCodeNotFoundError {

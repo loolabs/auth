@@ -5,7 +5,8 @@ import { EncryptedClientSecret } from '../../value-objects/encrypted-client-secr
 
 interface AuthSecretProps {
   clientId: string,
-  encryptedClientSecret: EncryptedClientSecret
+  encryptedClientSecret: EncryptedClientSecret,
+  isVerified: boolean
 }
 
 export class AuthSecret extends AggregateRoot<AuthSecretProps> {
@@ -30,5 +31,9 @@ export class AuthSecret extends AggregateRoot<AuthSecretProps> {
 
   get encryptedClientSecret(): EncryptedClientSecret {
     return this.props.encryptedClientSecret
+  }
+
+  get isVerified() :boolean {
+    return this.props.isVerified
   }
 }

@@ -1,10 +1,10 @@
 import { Application } from './types'
-import { Repos } from '../database'
 import { setupControllers } from './controllers'
 import { setupUseCases } from './use-cases'
+import { Persistence } from '../persistence/persistence'
 
-export const setupApplication = (repos: Repos): Application => {
-  const useCases = setupUseCases(repos)
+export const setupApplication = (persistence: Persistence): Application => {
+  const useCases = setupUseCases(persistence)
   const controllers = setupControllers(useCases)
 
   return {

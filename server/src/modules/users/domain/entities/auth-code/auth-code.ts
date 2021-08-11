@@ -6,14 +6,17 @@ import { AuthCodeCreated } from '../../events/auth-code-created'
 import { AuthCodeString } from '../../value-objects/auth-code'
 
 interface AuthCodeProps {
-  clientId: string,
-  userId: string,
+  clientId: string
+  userId: string
   authCodeString: AuthCodeString
 }
 
 export class AuthCode extends AggregateRoot<AuthCodeProps> {
-  public static create(props: AuthCodeProps, id?: UniqueEntityID): Result<AuthCode, AppError.UnexpectedError> {
-    const isNewAuthCode = (id === undefined)
+  public static create(
+    props: AuthCodeProps,
+    id?: UniqueEntityID
+  ): Result<AuthCode, AppError.UnexpectedError> {
+    const isNewAuthCode = id === undefined
     const authCode = new AuthCode(
       {
         ...props,
@@ -21,8 +24,7 @@ export class AuthCode extends AggregateRoot<AuthCodeProps> {
       id
     )
 
-    if (isNewAuthCode) 
-      authCode.addDomainEvent(new AuthCodeCreated(authCode))
+    if (isNewAuthCode) authCode.addDomainEvent(new AuthCodeCreated(authCode))
     return Result.ok(authCode)
   }
 
@@ -41,5 +43,4 @@ export class AuthCode extends AggregateRoot<AuthCodeProps> {
   get authCodeString(): AuthCodeString {
     return this.props.authCodeString
   }
-  
 }

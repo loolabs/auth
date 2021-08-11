@@ -9,4 +9,7 @@ export class AuthSecretEntity extends BaseEntity {
 
   @Property()
   encryptedClientSecret!: string
+
+  @Property()
+  isVerified!: boolean
 }
