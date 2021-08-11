@@ -15,10 +15,7 @@ export class MockAuthSecretRepo implements AuthSecretRepo {
   }
 
   async exists(clientId: string): Promise<Result<boolean, DBErrors>> {
-    for (const authSecretEntity of this.authSecretEntities.values()) {
-      if (authSecretEntity.clientId === clientId) return Result.ok(true)
-    }
-    return Result.ok(false)
+    return Result.ok(this.authSecretEntities.has(clientId))
   }
 
   async getAuthSecretByClientId(clientId: string): Promise<Result<AuthSecret, DBErrors>> {

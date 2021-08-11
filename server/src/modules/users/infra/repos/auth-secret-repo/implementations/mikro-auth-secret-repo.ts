@@ -13,11 +13,7 @@ export class MikroAuthSecretRepo implements AuthSecretRepo {
     const authSecretEntity = await this.authSecretEntityRepo.findOne({
       clientId: clientId,
     })
-    if (authSecretEntity !== null) {
-      return Result.ok(true)
-    } else {
-      return Result.ok(false)
-    }
+    return Result.ok(authSecretEntity !== null)
   }
 
   async getAuthSecretByClientId(clientId: string): Promise<Result<AuthSecret, DBErrors>> {

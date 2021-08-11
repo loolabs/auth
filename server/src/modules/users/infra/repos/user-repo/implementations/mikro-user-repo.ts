@@ -13,11 +13,7 @@ export class MikroUserRepo implements UserRepo {
 
   async exists(userEmail: UserEmail): Promise<Result<boolean, DBErrors>> {
     const user = await this.usersEntityRepo.findOne({ email: userEmail.value })
-    if (user !== null) {
-      return Result.ok(true)
-    } else {
-      return Result.ok(false)
-    }
+    return Result.ok(user !== null)
   }
 
   async getUserByUserId(userId: string): Promise<Result<User, DBErrors>> {
