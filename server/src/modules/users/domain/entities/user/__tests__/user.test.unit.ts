@@ -30,29 +30,6 @@ describe('User AggregateRoot', () => {
     expect(DomainEvents.markAggregateForDispatch).toBeCalled()
   })
 
-  test('it adds a UserLoggedIn domain event on user login', () => {
-    const emailResult = UserEmail.create('john.doe@uwaterloo.ca')
-    const passwordResult = UserPassword.create({ value: 'secretpassword', hashed: false })
-
-    if (emailResult.isErr() || passwordResult.isErr())
-      throw new Error('Result should be isOk, not isErr')
-
-    const userResult = User.create({
-      email: emailResult.value,
-      password: passwordResult.value,
-    })
-
-    if (userResult.isErr()) throw new Error('User result should be isOk, not isErr')
-
-    const user = userResult.value
-    user.setAccessToken('token', 'refresh')
-
-    // note: not sure if this is the best way to test AggregateRoot.addDomainEvent() was called with UserLoggedIn event
-    // TODO: if changes made here, see clubs/domain/entities/__tests__/club.test.unit.ts as well.
-    expect(UserLoggedIn).toBeCalled()
-    expect(DomainEvents.markAggregateForDispatch).toBeCalled()
-  })
-
   test('it adds a UserDeleted domain event on user deletion', () => {
     const emailResult = UserEmail.create('john.doe@uwaterloo.ca')
     const passwordResult = UserPassword.create({ value: 'secretpassword', hashed: false })

@@ -1,9 +1,8 @@
 export namespace GetUserErrors {
-    export class GetUserByIdFailedError {
-      public message: string
-      public constructor(id: string) {
-        this.message = `No account with the id ${id} exists`
-      }
+  export class GetUserByIdFailedError extends Error {
+    public constructor(id: string) {
+      super()
+      this.message = `No account with the id ${id} exists`
     }
   }
-  
+}

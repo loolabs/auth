@@ -17,17 +17,16 @@ export type CreateUserUseCaseError =
   | UserValueObjectErrors.InvalidEmail
   | UserValueObjectErrors.InvalidSecretValue
   | CreateUserErrors.EmailAlreadyExistsError
-  | CreateUserErrors.InvalidOpenIDParamsError
   | AppError.UnexpectedError
 
-export interface CreateUserClientRequestSuccess { 
-  redirectParams: ParamList,
+export interface CreateUserClientRequestSuccess {
+  redirectParams: ParamList
   redirectUrl: string
-}  
+}
 
 export interface CreateUserNonClientRequestSuccess {
   user: UserDTO
-}  
+}
 
 // TODO: perhaps better to decouple these into separate use-cases or further subclasses
 export type CreateUserSuccess = CreateUserClientRequestSuccess | CreateUserNonClientRequestSuccess
@@ -38,11 +37,6 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
   constructor(private authHandler: UserAuthHandler, private userRepo: UserRepo) {}
 
   async execute(dto: CreateUserDTO): Promise<CreateUserUseCaseResponse> {
-    if(dto.params && dto.params.scope){
-      if(dto.params.scope !== 'openid' || dto.params.response_type !== 'code'){
-        return Result.err(new CreateUserErrors.InvalidOpenIDParamsError())
-      }
-    } 
     const emailResult = UserEmail.create(dto.body.email)
     const passwordResult = UserPassword.create({
       value: dto.body.password,
@@ -60,47 +54,41 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
     try {
       const userAlreadyExists = await this.userRepo.exists(email)
 
-      if (userAlreadyExists && userAlreadyExists.isOk()){
+      if (userAlreadyExists && userAlreadyExists.isOk()) {
         return Result.err(new CreateUserErrors.EmailAlreadyExistsError(email.value))
       }
-        
+
       const userResult = User.create({
         email,
         password,
+        emailVerified: false,
+        isDeleted: false,
       })
       if (userResult.isErr()) return userResult
 
       const user = userResult.value
       await this.userRepo.save(user)
-      const updatedUser = await this.userRepo.getUserByUserEmail(email);
-      if(updatedUser.isErr())
+      const updatedUser = await this.userRepo.getUserByUserEmail(email)
+      if (updatedUser.isErr())
         return Result.err(new AppError.UnexpectedError(updatedUser.error.message))
 
-      if(!dto.params || !dto.params.scope){
+      if (!dto.params || !dto.params.scope) {
         return Result.ok({
-          user: UserMap.toDTO(updatedUser.value)
+          user: UserMap.toDTO(updatedUser.value),
         })
       } else {
         const userAuthHandlerCreateOptions = {
           userId: updatedUser.value.id.toString(),
-          clientId: dto.params.client_id
-        } 
-        const authHandlerResponse = await this.authHandler.create(userAuthHandlerCreateOptions)
-  
-        if(authHandlerResponse.isErr())
-          return authHandlerResponse
-        
-        const redirectParams = new ParamList([
-          new ParamPair('code', authHandlerResponse.value.getValue())
-        ])
-        const createUserSuccessResponse: CreateUserSuccess = {
-          redirectParams: redirectParams,
-          redirectUrl: dto.params.redirect_uri
+          userEmail: updatedUser.value.email,
+          userEmailVerified: updatedUser.value.isEmailVerified,
+          clientId: dto.params.client_id,
         }
-  
+        const authHandlerResponse = await this.authHandler.create(userAuthHandlerCreateOptions)
+
+        if (authHandlerResponse.isErr()) return authHandlerResponse
+
         return Result.ok(createUserSuccessResponse)
       }
-            
     } catch (err) {
       return Result.err(new AppError.UnexpectedError(err))
     }

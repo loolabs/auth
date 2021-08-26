@@ -18,12 +18,6 @@ export class UserEntity extends BaseEntity {
   isDeleted!: boolean
 
   @Property()
-  accessToken?: string
-
-  @Property()
-  refreshToken?: string
-
-  @Property()
   lastLogin?: Date
 
   @AfterCreate()

@@ -7,7 +7,10 @@ export type RedisSaveEntityResponse = Result<RedisSaveEntitySuccess, RedisSaveEn
 export type RedisSaveEntitySuccess = true
 export type RedisSaveEntityError = AppError.UnexpectedError
 
-export type RedisGetEntityResponse<RedisEntityType> = Result<RedisEntityType, RedisGetEntityError>
+export type RedisGetEntityResponse<RedisEntityType> = Result<
+  RedisEntityType | null,
+  RedisGetEntityError
+>
 export type RedisGetEntityError = AppError.UnexpectedError
 
 export type RedisDeleteEntityResponse = Result<RedisDeleteEntitySuccess, RedisDeleteEntityError>
@@ -22,8 +25,10 @@ export class RedisRepository<RedisEntityType> {
   async getEntity(entityKey: string): Promise<RedisGetEntityResponse<RedisEntityType>> {
     return new Promise((resolve) => {
       RedisClient().get(entityKey, (err, value) => {
-        if (err || value === null) {
+        if (err) {
           resolve(Result.err(new AppError.UnexpectedError(`Redis get operation failed. ${err}`)))
+        } else if (value === null) {
+          resolve(Result.ok(null))
         } else {
           resolve(Result.ok(JSON.parse(value) as RedisEntityType))
         }

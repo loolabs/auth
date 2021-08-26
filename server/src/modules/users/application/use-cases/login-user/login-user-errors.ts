@@ -1,14 +1,8 @@
 export namespace LoginUserErrors {
-  export class IncorrectPasswordError {
-    public message: string
+  export class IncorrectPasswordError extends Error {
     public constructor() {
+      super()
       this.message = `Incorrect email/password combination provided.`
-    }
-  }
-
-  export class InvalidOpenIDParamsError extends Error {
-    public constructor() {
-      super(`Invalid OpenID parameters were provided.`)
     }
   }
 }

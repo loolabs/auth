@@ -1,10 +1,10 @@
 import crypto from 'crypto'
 
 export class AuthCodeString {
-  private value: string;
-  
+  private value: string
+
   public constructor(hashedValue?: string) {
-    if(hashedValue){
+    if (hashedValue) {
       this.value = hashedValue
     } else {
       this.value = this.getRandomCode()
@@ -12,14 +12,14 @@ export class AuthCodeString {
   }
 
   private getRandomCode() {
-    /*motivation for a 256 bit (= 32 byte) crypographic key can be found here
+    /*motivation for a 256 bit (= 32 byte) cryptographic key can be found here
       https://www.geeksforgeeks.org/node-js-crypto-randombytes-method/
     */
     const authCodeBuffer = crypto.randomBytes(32)
     return authCodeBuffer.toString('hex')
   }
 
-  public getValue(){
+  public getValue() {
     return this.value
   }
 }

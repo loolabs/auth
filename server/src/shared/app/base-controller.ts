@@ -16,8 +16,8 @@ export abstract class BaseController {
   }
 
   public redirect<Res extends express.Response>(res: Res, url: string, params: ParamList) {
-    res.status(200).redirect(params.getFormattedUrlWithParams(url))
-    return this.ok(res)
+    res.redirect(params.getFormattedUrlWithParams(url))
+    return res
   }
 
   public fail<Res extends express.Response>(res: Res, error: Error | string): Res {

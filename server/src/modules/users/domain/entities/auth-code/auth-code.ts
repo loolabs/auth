@@ -3,11 +3,13 @@ import { Result } from '../../../../../shared/core/result'
 import { AggregateRoot } from '../../../../../shared/domain/aggregate-root'
 import { UniqueEntityID } from '../../../../../shared/domain/unique-entity-id'
 import { AuthCodeCreated } from '../../events/auth-code-created'
-import { AuthCodeString } from '../../value-objects/auth-code'
+import { AuthCodeString } from '../../value-objects/auth-code-string'
 
 interface AuthCodeProps {
   clientId: string
   userId: string
+  userEmail: string
+  userEmailVerified: boolean
   authCodeString: AuthCodeString
 }
 
@@ -34,6 +36,14 @@ export class AuthCode extends AggregateRoot<AuthCodeProps> {
 
   get clientId(): string {
     return this.props.clientId
+  }
+
+  get userEmail(): string {
+    return this.props.userEmail
+  }
+
+  get userEmailVerified(): boolean {
+    return this.props.userEmailVerified
   }
 
   get userId(): string {

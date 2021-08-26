@@ -15,6 +15,8 @@ export class AuthSecretMap {
     const authCodeResult = AuthSecret.create(
       {
         clientId: authSecretEntity.clientId,
+        decodedRedirectUri: authSecretEntity.decodedRedirectUri,
+        clientName: authSecretEntity.clientName,
         encryptedClientSecret: encryptedClientSecret.value,
         isVerified: authSecretEntity.isVerified,
       },
@@ -28,8 +30,11 @@ export class AuthSecretMap {
 
   public static async toPersistence(authSecret: AuthSecret): Promise<AuthSecretEntity> {
     const authSecretEntity = new AuthSecretEntity()
+    authSecretEntity.decodedRedirectUri = authSecret.decodedRedirectUri
+    authSecretEntity.clientName = authSecret.clientName
     authSecretEntity.clientId = authSecret.clientId
-    authSecretEntity.encryptedClientSecret = authSecret.encryptedClientSecret.value
+    const hashedEncryptedClientSecret = await authSecret.encryptedClientSecret.getHashedValue()
+    authSecretEntity.encryptedClientSecret = hashedEncryptedClientSecret
     authSecretEntity.isVerified = authSecret.isVerified
 
     return authSecretEntity
