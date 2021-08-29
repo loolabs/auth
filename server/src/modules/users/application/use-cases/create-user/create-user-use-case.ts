@@ -56,7 +56,7 @@ export class CreateUserUseCase implements UseCaseWithDTO<CreateUserDTO, CreateUs
 
     const userAlreadyExists = await this.userRepo.exists(email)
 
-    if (userAlreadyExists && userAlreadyExists.isOk()) {
+    if (userAlreadyExists.isOk() && userAlreadyExists.value) {
       return Result.err(new CreateUserErrors.EmailAlreadyExistsError(email.value))
     }
 

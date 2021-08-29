@@ -8,16 +8,16 @@ import { GetTokenUseCase } from '../get-token-use-case'
 import { GetTokenController } from '../get-token-controller'
 import { mocks } from '../../../../../../test-utils'
 
-jest.mock('../get-token-use-case')
-
 describe('GetTokenController', () => {
   let getTokenDTO: GetTokenDTO
   let getTokenController: GetTokenController
+  let getTokenUseCase: GetTokenUseCase
   let mockResponse: express.Response
 
   beforeAll(async () => {
     const getToken = await mocks.mockGetToken()
     getTokenController = getToken.getTokenController
+    getTokenUseCase = getToken.getTokenUseCase
     mockResponse = httpMocks.createResponse()
     getTokenDTO = {
       authHeader: 'asdklasdoladoassald',
@@ -31,9 +31,7 @@ describe('GetTokenController', () => {
 
   test('When the GetTokenUseCase returns Ok, the GetTokenController returns 200 OK', async () => {
     const useCaseResolvedValue = 'asdklasdhnjkjkewhf'
-    jest
-      .spyOn(GetTokenUseCase.prototype, 'execute')
-      .mockResolvedValue(Result.ok(useCaseResolvedValue))
+    jest.spyOn(getTokenUseCase, 'execute').mockResolvedValue(Result.ok(useCaseResolvedValue))
 
     const result = await getTokenController.executeImpl(getTokenDTO, mockResponse)
 
@@ -42,7 +40,7 @@ describe('GetTokenController', () => {
 
   test('When the GetTokenUseCase returns GetTokenErrors.InvalidCredentials, GetTokenController returns 400 Bad Request', async () => {
     jest
-      .spyOn(GetTokenUseCase.prototype, 'execute')
+      .spyOn(getTokenUseCase, 'execute')
       .mockResolvedValue(Result.err(new GetTokenErrors.InvalidCredentials()))
 
     const result = await getTokenController.executeImpl(getTokenDTO, mockResponse)
@@ -52,7 +50,7 @@ describe('GetTokenController', () => {
 
   test('When the GetTokenUseCase returns AppError.UnexpectedError, GetTokenController returns 500 Internal Server Error', async () => {
     jest
-      .spyOn(GetTokenUseCase.prototype, 'execute')
+      .spyOn(getTokenUseCase, 'execute')
       .mockResolvedValue(Result.err(new AppError.UnexpectedError('Unexpected error')))
 
     const result = await getTokenController.executeImpl(getTokenDTO, mockResponse)

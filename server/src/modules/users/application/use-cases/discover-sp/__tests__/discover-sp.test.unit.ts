@@ -8,31 +8,29 @@ import { DiscoverSPUseCase } from '../discover-sp-use-case'
 import { DiscoverSPController } from '../discover-sp-controller'
 import { mocks } from '../../../../../../test-utils'
 
-jest.mock('../discover-sp-use-case')
-
 describe('DiscoverSPController', () => {
   let discoverSPDTO: DiscoverSPDTO
   let discoverSPController: DiscoverSPController
+  let discoverSPUseCase: DiscoverSPUseCase
   let mockResponse: express.Response
 
   beforeAll(async () => {
     const discoverSP = await mocks.mockDiscoverSP()
     discoverSPController = discoverSP.discoverSPController
+    discoverSPUseCase = discoverSP.discoverSPUseCase
     mockResponse = httpMocks.createResponse()
     discoverSPDTO = {
       client_name: 'testclient',
-      redirect_uri: 'loolabs.com/cb',
+      redirect_uri: 'www.loolabs.org/cb',
     }
   })
 
   test('When the DiscoverSPUseCase returns Ok, the DiscoverSPController returns 200 OK', async () => {
     const useCaseResolvedValue = {
-      clientId: '232039sdkljkasldj',
-      clientSecret: '65039sdasd123kljkasldj',
+      clientId: 'fcc89db61d93607afbb7008df9197570',
+      clientSecret: '81281dd17eafeda8f34b2192aff22f2a',
     }
-    jest
-      .spyOn(DiscoverSPUseCase.prototype, 'execute')
-      .mockResolvedValue(Result.ok(useCaseResolvedValue))
+    jest.spyOn(discoverSPUseCase, 'execute').mockResolvedValue(Result.ok(useCaseResolvedValue))
 
     const result = await discoverSPController.executeImpl(discoverSPDTO, mockResponse)
 
@@ -41,7 +39,7 @@ describe('DiscoverSPController', () => {
 
   test('When the DiscoverSPUseCase returns DiscoverSPErrors, DiscoverSPController returns 400 Bad Request', async () => {
     jest
-      .spyOn(DiscoverSPUseCase.prototype, 'execute')
+      .spyOn(discoverSPUseCase, 'execute')
       .mockResolvedValue(
         Result.err(new DiscoverSPErrors.ClientNameAlreadyInUse(discoverSPDTO.client_name))
       )
@@ -53,7 +51,7 @@ describe('DiscoverSPController', () => {
 
   test('When the DiscoverSPUseCase returns AppError.UnexpectedError, DiscoverSPController returns 500 Internal Server Error', async () => {
     jest
-      .spyOn(DiscoverSPUseCase.prototype, 'execute')
+      .spyOn(discoverSPUseCase, 'execute')
       .mockResolvedValue(Result.err(new AppError.UnexpectedError('Unexpected error')))
 
     const result = await discoverSPController.executeImpl(discoverSPDTO, mockResponse)
