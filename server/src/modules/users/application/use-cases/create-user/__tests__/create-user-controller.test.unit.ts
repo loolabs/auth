@@ -8,18 +8,17 @@ import { CreateUserErrors } from '../create-user-errors'
 import { CreateUserSuccess, CreateUserUseCase } from '../create-user-use-case'
 import { UserMap } from '../../../../mappers/user-map'
 
-// TODO: how to show developer these mocks are necessary when building a controller? aka must be synced with buildController()
-jest.mock('../create-user-use-case')
-
 describe('CreateUserController', () => {
   const createUserDTO: CreateUserDTOBody = {
     email: 'john.doe@uwaterloo.ca',
     password: 'secret23',
   }
   let createUserController: CreateUserController
+  let createUserUseCase: CreateUserUseCase
   beforeAll(async () => {
     const createUser = await mocks.mockCreateUser()
     createUserController = createUser.createUserController
+    createUserUseCase = createUser.createUserUseCase
   })
 
   test('When the CreateUserUseCase returns Ok, the CreateUserController returns 200 OK', async () => {
@@ -28,8 +27,8 @@ describe('CreateUserController', () => {
     const useCaseResolvedValue: CreateUserSuccess = {
       user: UserMap.toDTO(user),
     }
-    
-    jest.spyOn(CreateUserUseCase.prototype, 'execute').mockResolvedValue(Result.ok(useCaseResolvedValue))
+
+    jest.spyOn(createUserUseCase, 'execute').mockResolvedValue(Result.ok(useCaseResolvedValue))
 
     const { req, res } = mocks.mockHandlerParams(createUserDTO)
     await createUserController.execute(req, res)
@@ -38,7 +37,7 @@ describe('CreateUserController', () => {
 
   test('When the CreateUserUseCase returns UserValueObjectErrors.InvalidEmail, CreateUserController returns 400 Bad Request', async () => {
     jest
-      .spyOn(CreateUserUseCase.prototype, 'execute')
+      .spyOn(createUserUseCase, 'execute')
       .mockResolvedValue(Result.err(new UserValueObjectErrors.InvalidEmail(createUserDTO.email)))
 
     const { req, res } = mocks.mockHandlerParams(createUserDTO)
@@ -57,7 +56,7 @@ describe('CreateUserController', () => {
 
   test('When the CreateUserUseCase returns UserValueObjectErrors.InvalidSecretValue, CreateUserController returns 400 Bad Request', async () => {
     jest
-      .spyOn(CreateUserUseCase.prototype, 'execute')
+      .spyOn(createUserUseCase, 'execute')
       .mockResolvedValue(
         Result.err(new UserValueObjectErrors.InvalidSecretValue(createUserDTO.password))
       )
@@ -69,7 +68,7 @@ describe('CreateUserController', () => {
 
   test('When the CreateUserUseCase returns CreateUserErrors.EmailAlreadyExistsError, CreateUserController returns 409 Conflict', async () => {
     jest
-      .spyOn(CreateUserUseCase.prototype, 'execute')
+      .spyOn(createUserUseCase, 'execute')
       .mockResolvedValue(
         Result.err(new CreateUserErrors.EmailAlreadyExistsError(createUserDTO.email))
       )
@@ -81,7 +80,7 @@ describe('CreateUserController', () => {
 
   test('When the CreateUserUseCase returns AppError.UnexpectedError, CreateUserController returns 500 Internal Server Error', async () => {
     jest
-      .spyOn(CreateUserUseCase.prototype, 'execute')
+      .spyOn(createUserUseCase, 'execute')
       .mockResolvedValue(Result.err(new AppError.UnexpectedError('Unexpected error')))
 
     const { req, res } = mocks.mockHandlerParams(createUserDTO)

@@ -2,7 +2,7 @@ import { Result } from '../../../../../../shared/core/result'
 import { AuthCodeEntity } from '../../../../../../shared/infra/cache/entities/auth-code-entity'
 import { DBError, DBErrors } from '../../../../../../shared/infra/db/errors/errors'
 import { AuthCode } from '../../../../domain/entities/auth-code'
-import { AuthCodeString } from '../../../../domain/value-objects/auth-code'
+import { AuthCodeString } from '../../../../domain/value-objects/auth-code-string'
 import { AuthCodeMap } from '../../../../mappers/auth-code-map'
 import { AuthCodeRepo } from '../auth-code-repo'
 

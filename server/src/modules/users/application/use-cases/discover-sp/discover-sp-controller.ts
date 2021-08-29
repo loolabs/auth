@@ -1,21 +1,21 @@
 import express from 'express'
+import { DiscoverSPUseCase } from './discover-sp-use-case'
+import { DiscoverSPDTO, discoverSPDTOSchema } from './discover-sp-dto'
+import { DiscoverSPErrors } from './discover-sp-errors'
 import { ControllerWithDTO } from '../../../../../shared/app/controller-with-dto'
-import { ProtectedUserUseCase } from './protected-user-use-case'
-import { ProtectedUserDTO, protectedUserDTOSchema } from './protected-user-dto'
 import { Result } from '../../../../../shared/core/result'
 import { ValidationError } from 'joi'
 
-export class ProtectedUserController extends ControllerWithDTO<ProtectedUserUseCase> {
-  constructor(useCase: ProtectedUserUseCase) { super(useCase) }
+export class DiscoverSPController extends ControllerWithDTO<DiscoverSPUseCase> {
+  constructor(useCase: DiscoverSPUseCase) {
+    super(useCase)
+  }
 
-  buildDTO(req: express.Request): Result<ProtectedUserDTO, Array<ValidationError>> {
+  buildDTO(req: express.Request): Result<DiscoverSPDTO, Array<ValidationError>> {
     const errs: Array<ValidationError> = []
-    const compiledBody = {
-      user: req.user
-    }
-    const bodyResult = this.validate(compiledBody, protectedUserDTOSchema)
+    const bodyResult = this.validate(req.body, discoverSPDTOSchema)
     if (bodyResult.isOk()) {
-      const body = bodyResult.value
+      const body: DiscoverSPDTO = bodyResult.value
       return Result.ok(body)
     } else {
       errs.push(bodyResult.error)
@@ -23,16 +23,18 @@ export class ProtectedUserController extends ControllerWithDTO<ProtectedUserUseC
     }
   }
 
-  async executeImpl(dto: ProtectedUserDTO, res: express.Response): Promise<express.Response> {
+  async executeImpl(dto: DiscoverSPDTO, res: express.Response): Promise<express.Response> {
     try {
       const result = await this.useCase.execute(dto)
-      
+
       if (result.isOk()) {
         return this.ok(res, result.value)
       } else {
         const error = result.error
 
         switch (error.constructor) {
+          case DiscoverSPErrors.ClientNameAlreadyInUse:
+            return this.clientError(res, error.message)
           default:
             return this.fail(res, error.message)
         }

@@ -5,6 +5,10 @@ export class AuthCodeEntity extends RedisEntity {
 
   userId!: string
 
+  userEmail!: string
+
+  userEmailVerified!: boolean
+
   authCodeString!: string
 
   getEntityKey() {
@@ -12,10 +16,12 @@ export class AuthCodeEntity extends RedisEntity {
   }
 
   toJSON(): object {
-    const { clientId, userId, authCodeString, id } = this
+    const { clientId, userId, userEmail, userEmailVerified, authCodeString, id } = this
     return {
       clientId,
       userId,
+      userEmail,
+      userEmailVerified,
       authCodeString,
       id,
     }

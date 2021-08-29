@@ -1,7 +1,7 @@
 import { Result } from '../../../../../shared/core/result'
 import { DBErrors } from '../../../../../shared/infra/db/errors/errors'
 import { AuthCode } from '../../../domain/entities/auth-code'
-import { AuthCodeString } from '../../../domain/value-objects/auth-code'
+import { AuthCodeString } from '../../../domain/value-objects/auth-code-string'
 
 export abstract class AuthCodeRepo {
   abstract getAuthCodeFromAuthCodeString(

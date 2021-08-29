@@ -3,7 +3,7 @@ import { AuthCodeEntity } from '../../../../../../shared/infra/cache/entities/au
 import { RedisRepository } from '../../../../../../shared/infra/cache/redis-repository'
 import { DBError, DBErrors } from '../../../../../../shared/infra/db/errors/errors'
 import { AuthCode } from '../../../../domain/entities/auth-code'
-import { AuthCodeString } from '../../../../domain/value-objects/auth-code'
+import { AuthCodeString } from '../../../../domain/value-objects/auth-code-string'
 import { AuthCodeMap } from '../../../../mappers/auth-code-map'
 import { AuthCodeRepo } from '../auth-code-repo'
 
@@ -16,9 +16,13 @@ export class RedisAuthCodeRepo implements AuthCodeRepo {
     authCodeString: AuthCodeString
   ): Promise<Result<AuthCode, DBErrors>> {
     const authCode = await this.authCodeEntityRepo.getEntity(authCodeString.getValue())
-    if (authCode.isErr())
-      return Result.err(new DBError.AuthSecretNotFoundError(authCodeString.getValue()))
-    return Result.ok(AuthCodeMap.toDomain(authCode.value))
+    if (authCode.isErr()) {
+      return Result.err(authCode.error)
+    } else if (authCode.value === null) {
+      return Result.err(new DBError.AuthCodeNotFoundError(authCodeString.getValue()))
+    } else {
+      return Result.ok(AuthCodeMap.toDomain(authCode.value))
+    }
   }
 
   async save(authCode: AuthCode): Promise<void> {

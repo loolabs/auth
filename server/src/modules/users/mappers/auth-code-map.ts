@@ -1,12 +1,14 @@
 import { AuthCodeEntity } from '../../../shared/infra/cache/entities/auth-code-entity'
 import { AuthCode } from '../domain/entities/auth-code'
-import { AuthCodeString } from '../domain/value-objects/auth-code'
+import { AuthCodeString } from '../domain/value-objects/auth-code-string'
 
 export class AuthCodeMap {
   public static toDomain(authCodeEntity: AuthCodeEntity): AuthCode {
     const authCode = AuthCode.create({
       clientId: authCodeEntity.clientId,
       userId: authCodeEntity.clientId,
+      userEmail: authCodeEntity.userEmail,
+      userEmailVerified: authCodeEntity.userEmailVerified,
       authCodeString: new AuthCodeString(authCodeEntity.authCodeString),
     })
     if (authCode.isErr()) throw new Error() // TODO: check if we should handle error differently
@@ -19,7 +21,8 @@ export class AuthCodeMap {
     authCodeEntity.clientId = authCode.clientId
     authCodeEntity.userId = authCode.userId
     authCodeEntity.authCodeString = authCode.authCodeString.getValue()
-
+    authCodeEntity.userEmail = authCode.userEmail
+    authCodeEntity.userEmailVerified = authCode.userEmailVerified
     return authCodeEntity
   }
 }

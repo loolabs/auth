@@ -9,13 +9,14 @@ import { AuthenticateUserDTO } from './authenticate-user-dto'
 import { AuthenticateUserErrors } from './authenticate-user-errors'
 
 type AuthenticateUserUseCaseError =
-    AuthenticateUserErrors.AuthenticationFailedError
+  | AuthenticateUserErrors.AuthenticationFailedError
   | AppError.UnexpectedError
 
 export type AuthenticateUserUseCaseResponse = Result<User, AuthenticateUserUseCaseError>
 
 export class AuthenticateUserUseCase
-  implements UseCaseWithDTO<AuthenticateUserDTO, AuthenticateUserUseCaseResponse> {
+  implements UseCaseWithDTO<AuthenticateUserDTO, AuthenticateUserUseCaseResponse>
+{
   private userRepo: UserRepo
 
   constructor(userRepo: UserRepo) {
@@ -37,14 +38,18 @@ export class AuthenticateUserUseCase
     const email = results[0].value
     const password = results[1].value
 
-    try {
-      const userByEmailAndPassword = await this.userRepo.getUserByUserEmailandUserPassword(email, password)
-      if (userByEmailAndPassword.isErr()) {
-        return Result.err(new AuthenticateUserErrors.AuthenticationFailedError(email.value, userByEmailAndPassword.error.message))
-      }
-      return Result.ok(userByEmailAndPassword.value)
-    } catch (err) {
-      return Result.err(new AppError.UnexpectedError(err))
+    const userByEmailAndPassword = await this.userRepo.getUserByUserEmailandUserPassword(
+      email,
+      password
+    )
+    if (userByEmailAndPassword.isErr()) {
+      return Result.err(
+        new AuthenticateUserErrors.AuthenticationFailedError(
+          email.value,
+          userByEmailAndPassword.error.message
+        )
+      )
     }
+    return Result.ok(userByEmailAndPassword.value)
   }
 }

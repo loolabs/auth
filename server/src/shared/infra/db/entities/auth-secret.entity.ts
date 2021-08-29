@@ -8,6 +8,12 @@ export class AuthSecretEntity extends BaseEntity {
   clientId!: string
 
   @Property()
+  decodedRedirectUri!: string
+
+  @Property()
+  clientName!: string
+
+  @Property()
   encryptedClientSecret!: string
 
   @Property()

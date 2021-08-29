@@ -1,4 +1,6 @@
 export { mockCreateUser } from './mock-create-user'
 export { mockGetUser } from './mock-get-user'
 export { mockLoginUser } from './mock-login-user'
-export { mockProtectedUser } from './mock-protected-user'
+export { mockGetToken } from './mock-get-token'
+export { mockAuthorizeUser } from './mock-authorize-user'
+export { mockDiscoverSP } from './mock-discover-sp'
