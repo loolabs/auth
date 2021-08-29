@@ -1,7 +1,6 @@
 import { DomainEvents } from '../../../../../../shared/domain/events/domain-events'
 import { UserCreated } from '../../../events/user-created'
 import { UserDeleted } from '../../../events/user-deleted'
-import { UserLoggedIn } from '../../../events/user-logged-in'
 import { UserEmail } from '../../../value-objects/user-email'
 import { UserPassword } from '../../../value-objects/user-password'
 import { User } from '../user'

@@ -23,13 +23,7 @@ export type GetTokenUseCaseResponse = Result<GetTokenSupportedResponseType, GetT
 export const ID_TOKEN_EXPIRY_TIME_SECONDS = 300 //5 minutes
 
 export class GetTokenUseCase implements UseCaseWithDTO<GetTokenDTO, GetTokenUseCaseResponse> {
-  private authCodeRepo
-  private authSecretRepo
-
-  constructor(authCodeRepo: AuthCodeRepo, authSecretRepo: AuthSecretRepo) {
-    this.authCodeRepo = authCodeRepo
-    this.authSecretRepo = authSecretRepo
-  }
+  constructor(private authCodeRepo: AuthCodeRepo, private authSecretRepo: AuthSecretRepo) {}
 
   async execute(dto: GetTokenDTO): Promise<GetTokenUseCaseResponse> {
     const authHeader = dto.authHeader

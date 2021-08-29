@@ -11,17 +11,15 @@ class UserRouter {
   static using(controllers: Controllers): Router {
     const userRouter = Router()
 
-    userRouter.post('/', (req, res): void => {
-      controllers.createUser.execute(req, res)
-    })
-
     userRouter.post('/login', (req, res): void => {
       controllers.loginUser.execute(req, res)
     })
+    userRouter.post('/create', (req, res) => controllers.createUser.execute(req, res))
+    userRouter.get('/authorize', (req, res) => controllers.authorizeUser.execute(req, res))
+    userRouter.get('/token', (req, res) => controllers.getToken.execute(req, res))
+    userRouter.post('/discovery', (req, res) => controllers.discoverSP.execute(req, res))
 
-    userRouter.get('/protected', (req, res) => controllers.protectedUser.execute(req, res))
     userRouter.use(limiter)
-
     return userRouter
   }
 }

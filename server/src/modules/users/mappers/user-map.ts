@@ -31,8 +31,6 @@ export class UserMap {
         email,
         password,
         emailVerified: userEntity.emailVerified,
-        accessToken: userEntity.accessToken,
-        refreshToken: userEntity.refreshToken,
         isDeleted: userEntity.isDeleted,
         lastLogin: userEntity.lastLogin,
       },
@@ -55,8 +53,6 @@ export class UserMap {
     if (user.isEmailVerified !== undefined) userEntity.emailVerified = user.isEmailVerified
     if (user.isDeleted !== undefined) userEntity.isDeleted = user.isDeleted
 
-    userEntity.accessToken = user.accessToken
-    userEntity.refreshToken = user.refreshToken
     userEntity.lastLogin = user.lastLogin
 
     return userEntity

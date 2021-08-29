@@ -13,11 +13,7 @@ export class DiscoverSPController extends ControllerWithDTO<DiscoverSPUseCase> {
 
   buildDTO(req: express.Request): Result<DiscoverSPDTO, Array<ValidationError>> {
     const errs: Array<ValidationError> = []
-    const compiledValidationBody = {
-      authHeader: req.headers.authorization,
-      params: req.params,
-    }
-    const bodyResult = this.validate(compiledValidationBody, discoverSPDTOSchema)
+    const bodyResult = this.validate(req.body, discoverSPDTOSchema)
     if (bodyResult.isOk()) {
       const body: DiscoverSPDTO = bodyResult.value
       return Result.ok(body)

@@ -12,15 +12,20 @@ export class CreateUserController extends ControllerWithDTO<CreateUserUseCase> {
     super(useCase)
   }
 
-  buildDTO(req: express.Request): Result<CreateUserDTO, Array<ValidationError>> {
+  buildDTO(
+    req: express.Request,
+    res: express.Response
+  ): Result<CreateUserDTO, Array<ValidationError>> {
     let params: any = req.params
-    if(Object.keys(req.params).length === 0){
+    if (Object.keys(req.params).length === 0) {
       params = undefined
     }
     const errs: Array<ValidationError> = []
     const compiledRequest = {
+      req,
+      res,
       body: req.body,
-      params 
+      params,
     }
     const bodyResult = this.validate(compiledRequest, createUserDTOSchema)
     if (bodyResult.isOk()) {
@@ -35,9 +40,9 @@ export class CreateUserController extends ControllerWithDTO<CreateUserUseCase> {
   async executeImpl<Res extends express.Response>(dto: CreateUserDTO, res: Res): Promise<Res> {
     try {
       const result = await this.useCase.execute(dto)
-      
+
       if (result.isOk()) {
-        if('user' in result.value){
+        if ('user' in result.value) {
           return this.ok(res, result.value)
         } else {
           return this.redirect(res, result.value.redirectUrl, result.value.redirectParams)

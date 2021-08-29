@@ -21,11 +21,7 @@ export interface DiscoverSPSuccess {
 export type DiscoverSPUseCaseResponse = Result<DiscoverSPSuccess, DiscoverSPUseCaseError>
 
 export class DiscoverSPUseCase implements UseCaseWithDTO<DiscoverSPDTO, DiscoverSPUseCaseResponse> {
-  private authSecretRepo
-
-  constructor(authSecretRepo: AuthSecretRepo) {
-    this.authSecretRepo = authSecretRepo
-  }
+  constructor(private authSecretRepo: AuthSecretRepo) {}
 
   async execute(dto: DiscoverSPDTO): Promise<DiscoverSPUseCaseResponse> {
     const authSecretExists = await this.authSecretRepo.clientNameExists(dto.client_name)
@@ -58,8 +54,8 @@ export class DiscoverSPUseCase implements UseCaseWithDTO<DiscoverSPDTO, Discover
     }
     await this.authSecretRepo.save(authSecret.value)
     return Result.ok({
-      clientId: authSecret.value.clientId,
-      clientSecret: encryptedClientSecret.value.value,
+      clientId: Buffer.from(authSecret.value.clientId).toString('base64'),
+      clientSecret: Buffer.from(encryptedClientSecret.value.value).toString('base64'),
     })
   }
 }
